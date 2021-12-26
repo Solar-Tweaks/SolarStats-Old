@@ -1,0 +1,12 @@
+{
+  "api_key": "",
+  "dodge": {
+    "enabled": true, // Whether or not to use auto dodge
+    // (If false you will still be able to use the '/dodge' command)
+    // Dodge when:
+    "nicked": true, // Player is nicked
+    "winStreak": 10, // Player has a winstreak of 10 or more
+    "bestWinStreak": 25, // Player's best winstreak is 25 or more
+    "sendStats": false // Send stats even if the game has been dodged
+  }
+}

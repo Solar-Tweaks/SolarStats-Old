@@ -1,0 +1,45 @@
+{
+  "name": "solarstats",
+  "version": "1.0.0",
+  "description": "Official SolarTweaks Stats proxy",
+  "main": "dist/index.js",
+  "bin": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Solar-Tweaks/SolarStats.git"
+  },
+  "keywords": [
+    "proxy",
+    "minecraft",
+    "solarstats"
+  ],
+  "author": "RichardDorian",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Solar-Tweaks/SolarStats/issues"
+  },
+  "homepage": "https://github.com/Solar-Tweaks/SolarStats#readme",
+  "dependencies": {
+    "hypixel-api-reborn": "^9.0.3",
+    "minecraft-protocol": "^1.30.0",
+    "prismarine-proxy": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.5",
+    "typed-emitter": "^1.4.0",
+    "typescript": "^4.5.4"
+  },
+  "pkg": {
+    "scripts": "dist/**/*.js",
+    "assets": "node_modules/minecraft-packets/minecraft-packets/data",
+    "targets": [
+      "node16-windows-x64"
+    ],
+    "outputPath": "build"
+  }
+}
