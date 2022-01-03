@@ -123,7 +123,7 @@ export default class Player {
         if (config.dodge.enabled && config.dodge.nicked) {
           dodged = true;
           await this.dodge(
-            '§aWe dodged this game for you because one\nor more were nicked.'
+            '§aWe dodged this game for you because one\n§aor more were nicked.'
           );
         }
       }
