@@ -121,7 +121,7 @@ export default class Player {
         formattedPlayers.push('§cOne player is nicked!');
 
         if (config.dodge.enabled && config.dodge.nicked) {
-          dodged = false;
+          dodged = true;
           await this.dodge(
             '§aWe dodged this game for you because one\nor more were nicked.'
           );
