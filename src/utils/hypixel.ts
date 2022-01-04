@@ -54,7 +54,7 @@ export function transformNickname(player: Player): string {
     case 'Admin':
       nickname = `§cAdmin ${player.nickname}`;
       break;
-    case 'Moderator':
+    case 'Game Master':
       nickname = `§2[GM] ${player.nickname}`;
       break;
     case 'VIP':
@@ -79,6 +79,11 @@ export function transformNickname(player: Player): string {
     case 'YouTube':
       nickname = `§a[§7YT] ${player.nickname}`;
       break;
+    case 'MOJANG':
+      nickname = `§6[MOJANG] ${player.nickname}`;
+      break;
+    case 'PIG+++':
+      nickname = `§d[PIG§b+++§d] ${player.nickname}`;
     default:
       nickname = `§7${player.nickname}`;
       break;
