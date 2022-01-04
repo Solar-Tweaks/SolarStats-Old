@@ -80,6 +80,7 @@ export default class Player {
     this.online = false;
     this.uuid = null;
     this.client = null;
+    this.status = null;
     this.playerList = [];
 
     this.listener.removeAllListeners('server_full');
@@ -140,6 +141,10 @@ export default class Player {
   public async dodge(stats?: string): Promise<void> {
     this.sendMessage('§a§lDodging!', stats);
     if (!this.status) {
+      this.sendMessage('§cYou are not in a game!');
+      return;
+    }
+    if (this.status.mode === 'LOBBY') {
       this.sendMessage('§cYou are not in a game!');
       return;
     }
