@@ -15,7 +15,7 @@ For now you must [build it yourself](#building-from-source-%EF%B8%8F).
 To use it you need to have [NodeJS](https://nodejs.org/en/) installed. *(LTS version is recommended)*
 
 ## Configuration ⚙️
-At the root of the project create a `config.json` file with the following content: *(You can also find the content of this file in the `config.example.jsonc` file)*
+At the root of the project (or in the same directory as the executable) create a `config.json` file with the following content: *(You can also find the content of this file in the `config.example.jsonc` file)*
 ```json5
 {
   "api_key": "", // Your Hypixel API key (`/api` in game)
@@ -33,9 +33,16 @@ At the root of the project create a `config.json` file with the following conten
 
 ## Starting the server 🚀
 Make sure to [have built](#building-from-source-%EF%B8%8F) the server before starting it.
-Run the following command
+
+### With NodeJS
 ```bash
 $ npm run start
+```
+
+### With the executable
+Just execute the executable file. For non windows operating system you can use
+```bash
+$ .\path\to\executable
 ```
 
 # Building from source 🏗️
@@ -48,9 +55,13 @@ Once the repo is downloaded move to the directory and install the dependencies
 $ cd SolarStats
 $ npm install
 ```
-Finally build the project using
+You can build the project (but you will need to use `npm run start` to start it)
 ```bash
 $ npm run build
+```
+Or you can package to an executable with
+```bash
+$ npm run package
 ```
 
 # Authenticating 🔒
