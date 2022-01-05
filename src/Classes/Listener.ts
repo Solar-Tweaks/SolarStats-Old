@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import TypedEmitter from 'typed-emitter';
-import { Command, isCommand, ListenerEvents } from '../Types';
+import { isCommand, ListenerEvents } from '../Types';
 import { InstantConnectProxy } from 'prismarine-proxy';
 import { player } from '..';
 

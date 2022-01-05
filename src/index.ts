@@ -1,10 +1,11 @@
 import { InstantConnectProxy } from 'prismarine-proxy';
 import { Client } from 'hypixel-api-reborn';
-
 import Listener from './Classes/Listener';
 import Player from './Classes/Player';
 import { readFileSync } from 'fs';
-import { Config, isCommand } from './Types';
+import { Config } from './Types';
+import CommandHandler from './Classes/CommandHandler';
+import dodge from './commands/dodge';
 
 export const config: Config = JSON.parse(readFileSync('./config.json', 'utf8'));
 
@@ -34,16 +35,18 @@ const proxy = new InstantConnectProxy({
 console.log('Proxy started');
 
 export const listener = new Listener(proxy);
-export const player = new Player(listener, proxy);
+export const player = new Player(listener);
+
+export const commandHandler = new CommandHandler(proxy);
+commandHandler.registerCommand([dodge.setPlayer(player)]);
 
 proxy.on('incoming', (data, meta, toClient) => {
   toClient.write(meta.name, data);
 });
 
 proxy.on('outgoing', (data, meta, toClient, toServer) => {
-  if (meta.name === 'chat') {
-    if (isCommand(data.message)) return;
-  }
+  // Handling chat packet in Classes/CommandHandler.ts
+  if (meta.name === 'chat') return;
 
   toServer.write(meta.name, data);
 });

@@ -1,6 +1,5 @@
 import { Status } from 'hypixel-api-reborn';
 import { Client } from 'minecraft-protocol';
-import { InstantConnectProxy } from 'prismarine-proxy';
 import { config } from '..';
 import { ChatMessage, Mode, PlayerInfo } from '../Types';
 import formatStats from '../utils/formatStats';
@@ -14,15 +13,12 @@ export default class Player {
   public server?: Client;
   public status?: Status;
   public playerList: PlayerInfo[];
+  public listener: Listener;
 
-  private listener: Listener;
-  private proxy: InstantConnectProxy;
-
-  public constructor(listener: Listener, proxy: InstantConnectProxy) {
+  public constructor(listener: Listener) {
     this.online = false;
 
     this.listener = listener;
-    this.proxy = proxy;
   }
 
   public connect(client: Client, server: Client): void {
@@ -60,17 +56,6 @@ export default class Player {
         .catch(() => {
           this.status = null;
         });
-    });
-
-    this.listener.on('command', async (command, client) => {
-      switch (command) {
-        case '/d':
-        case '/dodge':
-          await this.dodge();
-          break;
-        default:
-          break;
-      }
     });
   }
 
