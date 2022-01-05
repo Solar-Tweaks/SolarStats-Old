@@ -6,6 +6,7 @@ import { readFileSync } from 'fs';
 import { Config } from './Types';
 import CommandHandler from './Classes/CommandHandler';
 import dodge from './commands/dodge';
+import reqeue from './commands/reqeue';
 
 export const config: Config = JSON.parse(readFileSync('./config.json', 'utf8'));
 
@@ -38,7 +39,10 @@ export const listener = new Listener(proxy);
 export const player = new Player(listener);
 
 export const commandHandler = new CommandHandler(proxy);
-commandHandler.registerCommand([dodge.setPlayer(player)]);
+commandHandler.registerCommand([
+  dodge.setPlayer(player),
+  reqeue.setPlayer(player),
+]);
 
 proxy.on('incoming', (data, meta, toClient) => {
   toClient.write(meta.name, data);

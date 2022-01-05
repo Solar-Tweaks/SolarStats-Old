@@ -51,10 +51,16 @@ export interface ListenerEvents {
   command: (command: Command, client: Client) => void;
 }
 
-export type Command = '/d' | '/dodge';
+export type Command = '/d' | '/dodge' | '/reqeue' | '/rq' | '/req';
 
 export function isCommand(command: string): command is Command {
-  return command === '/d' || command === '/dodge';
+  return (
+    command === '/d' ||
+    command === '/dodge' ||
+    command === '/reqeue' ||
+    command === '/rq' ||
+    command === '/req'
+  );
 }
 
 export interface ChatMessage {

@@ -12,6 +12,7 @@ export default class Player {
   public client?: Client;
   public server?: Client;
   public status?: Status;
+  public lastGameMode?: string;
   public playerList: PlayerInfo[];
   public listener: Listener;
 
@@ -52,6 +53,9 @@ export default class Player {
       fetchPlayerLocation(this.uuid)
         .then((status) => {
           this.status = status;
+
+          if (this.status.mode !== 'LOBBY')
+            this.lastGameMode = this.status.mode;
         })
         .catch(() => {
           this.status = null;
@@ -91,6 +95,8 @@ export default class Player {
             this.status.mode as Mode
           );
           formattedPlayers.push(formattedStats.string);
+
+          if (!formattedStats.stats) return;
 
           if (
             config.dodge.enabled &&
@@ -134,9 +140,7 @@ export default class Player {
       return;
     }
 
-    this.server.write('chat', {
-      message: `/play ${this.status.mode.toLowerCase()}`,
-    });
+    this.executeCommand(`/play ${this.status.mode.toLowerCase()}`);
 
     let switched = false;
     this.listener.once('switch_server', () => {
@@ -150,9 +154,7 @@ export default class Player {
         `§cSending you back to lobby because of timeout (${timeout}ms)!`
       );
 
-      this.server.write('chat', {
-        message: `/lobby`,
-      });
+      this.executeCommand('/lobby');
 
       switched = false;
       this.listener.once('switch_server', () => {
@@ -168,12 +170,16 @@ export default class Player {
     }, timeout);
   }
 
-  public async sendMessage(text: string, hoverText?: string): Promise<void> {
+  public sendMessage(text: string, hoverText?: string): void {
     const message: ChatMessage = { text };
     if (hoverText) {
       message.hoverEvent = { action: 'show_text', value: { text: hoverText } };
       message.text += ` §7(Hover for more informations)`;
     }
     this.client.write('chat', { message: JSON.stringify(message) });
+  }
+
+  public executeCommand(command: string): void {
+    this.server.write('chat', { message: command });
   }
 }
