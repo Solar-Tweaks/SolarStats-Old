@@ -64,19 +64,17 @@ export default class Player {
   }
 
   public disconnect(): void {
-    if (!this.online) throw new Error("Can't disconnect player if not online");
-
     this.online = false;
     this.uuid = null;
     this.client = null;
     this.status = null;
+    this.lastGameMode = null;
     this.playerList = [];
 
     this.listener.removeAllListeners('server_full');
     this.listener.removeAllListeners('player_join');
     this.listener.removeAllListeners('player_leave');
     this.listener.removeAllListeners('switch_server');
-    this.listener.removeAllListeners('command');
   }
 
   public async sendStats(): Promise<void> {
@@ -115,7 +113,7 @@ export default class Player {
         if (config.dodge.enabled && config.dodge.nicked) {
           dodged = true;
           await this.dodge(
-            '§aWe dodged this game for you because one\n§aor more were nicked.'
+            '§aWe dodged this game for you because one\n§aor more player(s) were nicked.'
           );
         }
       }
@@ -170,11 +168,15 @@ export default class Player {
     }, timeout);
   }
 
-  public sendMessage(text: string, hoverText?: string): void {
+  public sendMessage(
+    text: string,
+    hoverText?: string,
+    showHoverHint = true
+  ): void {
     const message: ChatMessage = { text };
     if (hoverText) {
       message.hoverEvent = { action: 'show_text', value: { text: hoverText } };
-      message.text += ` §7(Hover for more informations)`;
+      if (showHoverHint) message.text += ` §7(Hover for more informations)`;
     }
     this.client.write('chat', { message: JSON.stringify(message) });
   }

@@ -14,7 +14,7 @@ export const hypixelClient = new Client(config.api_key, {
   cache: true,
 });
 
-const server = 'hypixel.net';
+const server = 'localhost';
 
 const proxy = new InstantConnectProxy({
   loginHandler: (client) => ({
@@ -65,7 +65,6 @@ proxy.on('start', (client, server) => {
 });
 
 proxy.on('end', (username) => {
-  if (!player.online) throw new Error('Player is not online');
   console.log(`${username} disconnected from the proxy`);
   player.disconnect();
 });

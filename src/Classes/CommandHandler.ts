@@ -10,7 +10,7 @@ export default class CommandHandler {
 
     proxy.on('outgoing', (data, meta, toClient, toServer) => {
       if (meta.name === 'chat') {
-        const message = data.message;
+        const message = data.message.toLowerCase().split(' ')[0];
         if (!isCommand(message)) {
           toServer.write(meta.name, data);
           return;
@@ -22,7 +22,7 @@ export default class CommandHandler {
             command.aliases.includes(message.replace('/', ''))
         );
 
-        if (command) command.onTriggered(message);
+        if (command) command.onTriggered(data.message);
         else console.log(`Command ${message} not found`);
       }
     });

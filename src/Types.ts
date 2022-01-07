@@ -13,7 +13,7 @@ export interface Config {
 }
 
 export interface PlayerData {
-  uuid: string;
+  player: string;
   name: string;
   formattedNickname: string;
   stats: typeof HypixelPlayer.prototype.stats;
@@ -48,10 +48,17 @@ export interface ListenerEvents {
   server_full: (playerCount: number) => void;
   player_join: (player: PlayerInfo) => void;
   player_leave: (uuid: string) => void;
-  command: (command: Command, client: Client) => void;
 }
 
-export type Command = '/d' | '/dodge' | '/reqeue' | '/rq' | '/req';
+export type Command =
+  | '/d'
+  | '/dodge'
+  | '/reqeue'
+  | '/rq'
+  | '/req'
+  | '/stat'
+  | '/stats'
+  | '/st';
 
 export function isCommand(command: string): command is Command {
   return (
@@ -59,7 +66,10 @@ export function isCommand(command: string): command is Command {
     command === '/dodge' ||
     command === '/reqeue' ||
     command === '/rq' ||
-    command === '/req'
+    command === '/req' ||
+    command === '/stat' ||
+    command === '/stats' ||
+    command === '/st'
   );
 }
 

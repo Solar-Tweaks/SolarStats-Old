@@ -58,13 +58,5 @@ export default class Listener extends (EventEmitter as new () => TypedEmitter<Li
         }
       }
     });
-
-    proxy.on('outgoing', (data, meta, client) => {
-      if (meta.name === 'chat') {
-        if (isCommand(data.message)) {
-          this.emit('command', data.message, client);
-        }
-      }
-    });
   }
 }

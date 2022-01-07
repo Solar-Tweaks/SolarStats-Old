@@ -2,17 +2,19 @@ import { Color, Player, Status } from 'hypixel-api-reborn';
 import { hypixelClient } from '..';
 import { PlayerData } from '../Types';
 
-export async function fetchPlayerData(uuid: string): Promise<PlayerData> {
+export async function fetchPlayerData(
+  playerOrUuid: string
+): Promise<PlayerData> {
   const playerData: PlayerData = {
-    uuid,
+    player: playerOrUuid,
     name: null,
     formattedNickname: null,
     stats: null,
     online: false,
   };
 
-  const player = hypixelClient.getPlayer(uuid);
-  const status = hypixelClient.getStatus(uuid);
+  const player = hypixelClient.getPlayer(playerOrUuid);
+  const status = hypixelClient.getStatus(playerOrUuid);
 
   return new Promise<PlayerData>((resolve) => {
     Promise.all([player, status])
