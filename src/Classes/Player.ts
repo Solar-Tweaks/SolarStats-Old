@@ -29,8 +29,8 @@ export default class Player {
     this.server = server;
     this.playerList = [];
 
-    this.listener.on('server_full', () => {
-      this.sendStats();
+    this.listener.on('server_full', async () => {
+      await this.sendStats();
     });
 
     this.listener.on('player_join', (playerInfo) => {
