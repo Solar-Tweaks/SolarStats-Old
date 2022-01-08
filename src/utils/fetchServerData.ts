@@ -23,9 +23,9 @@ function isNewPingResult(value: any): value is NewPingResult {
   return (
     value &&
     typeof value === 'object' &&
-    value.hasOwnProperty('description') &&
-    value.hasOwnProperty('players') &&
-    value.hasOwnProperty('version') &&
-    value.hasOwnProperty('latency')
+	Object.prototype.hasOwnProperty.call(value, 'description') &&
+	Object.prototype.hasOwnProperty.call(value, 'players') &&
+	Object.prototype.hasOwnProperty.call(value, 'version') &&
+	Object.prototype.hasOwnProperty.call(value, 'latency')
   );
 }
