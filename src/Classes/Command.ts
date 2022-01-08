@@ -15,5 +15,7 @@ export default class Command {
     return this;
   }
 
-  public onTriggered(command: string): void {}
+  public onTriggered(command: string): void {
+	  console.warn(`Command ${command} not handled!`);
+  }
 }

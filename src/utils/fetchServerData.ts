@@ -4,7 +4,7 @@ export default async function (
   host: string,
   port = 25565
 ): Promise<NewPingResult> {
-  return new Promise<NewPingResult>((resolve, reject) => {
+  return new Promise<NewPingResult>((resolve) => {
     ping({ host, port, version: '1.18' }, (error, result) => {
       if (error) {
         console.error(
