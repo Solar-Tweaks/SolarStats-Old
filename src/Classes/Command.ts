@@ -1,4 +1,4 @@
-import Player from './Player';
+import Player from "./Player";
 
 export default class Command {
   public name: string;
@@ -16,6 +16,6 @@ export default class Command {
   }
 
   public onTriggered(command: string): void {
-	  console.warn(`Command ${command} not handled!`);
+    console.warn(`Command ${command} not handled!`);
   }
 }

@@ -1,22 +1,22 @@
-import Command from '../Classes/Command';
-import Player from '../Classes/Player';
-import { Mode } from '../Types';
-import formatStats from '../utils/formatStats';
-import { fetchPlayerData } from '../utils/hypixel';
+import Command from "../Classes/Command";
+import Player from "../Classes/Player";
+import { Mode } from "../Types";
+import formatStats from "../utils/formatStats";
+import { fetchPlayerData } from "../utils/hypixel";
 
-const stat = new Command('stat', ['stats', 'st']);
+const stat = new Command("stat", ["stats", "st"]);
 
 stat.onTriggered = async (command: string): Promise<void> => {
-  const args = command.split(' ');
+  const args = command.split(" ");
   const slashCommand = args.shift();
-   /* const playerName = args[0];  Unused for now */
+  /* const playerName = args[0];  Unused for now */
 
-  let formattedStats = '';
+  let formattedStats = "";
 
   switch (args.length) {
     case 0:
       if (!playedSinceConnection(stat.player)) {
-        stat.player.sendMessage('§cYou have not played since you connected.');
+        stat.player.sendMessage("§cYou have not played since you connected.");
         return;
       }
 

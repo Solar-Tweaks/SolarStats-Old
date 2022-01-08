@@ -1,6 +1,6 @@
-import Command from '../Classes/Command';
+import Command from "../Classes/Command";
 
-const dodge = new Command('dodge', ['d']);
+const dodge = new Command("dodge", ["d"]);
 
 dodge.onTriggered = async (): void => {
   await dodge.player.dodge();

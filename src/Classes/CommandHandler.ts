@@ -1,6 +1,6 @@
-import { InstantConnectProxy } from 'prismarine-proxy';
-import { isCommand } from '../Types';
-import Command from './Command';
+import { InstantConnectProxy } from "prismarine-proxy";
+import { isCommand } from "../Types";
+import Command from "./Command";
 
 export default class CommandHandler {
   public commands: Command[];
@@ -8,9 +8,9 @@ export default class CommandHandler {
   public constructor(proxy: InstantConnectProxy) {
     this.commands = [];
 
-    proxy.on('outgoing', (data, meta, toClient, toServer) => {
-      if (meta.name === 'chat') {
-        const message = data.message.toLowerCase().split(' ')[0];
+    proxy.on("outgoing", (data, meta, toClient, toServer) => {
+      if (meta.name === "chat") {
+        const message = data.message.toLowerCase().split(" ")[0];
         if (!isCommand(message)) {
           toServer.write(meta.name, data);
           return;
@@ -18,8 +18,8 @@ export default class CommandHandler {
 
         const command = this.commands.find(
           (command) =>
-            command.name === message.replace('/', '') ||
-            command.aliases.includes(message.replace('/', ''))
+            command.name === message.replace("/", "") ||
+            command.aliases.includes(message.replace("/", ""))
         );
 
         if (command) command.onTriggered(data.message);

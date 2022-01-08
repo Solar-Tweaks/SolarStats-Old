@@ -1,6 +1,6 @@
-import { Color, Player, Status } from 'hypixel-api-reborn';
-import { hypixelClient } from '..';
-import { PlayerData } from '../Types';
+import { Color, Player, Status } from "hypixel-api-reborn";
+import { hypixelClient } from "..";
+import { PlayerData } from "../Types";
 
 export async function fetchPlayerData(
   playerOrUuid: string
@@ -51,113 +51,113 @@ export async function fetchPlayerLocation(uuid: string): Promise<Status> {
 }
 
 export function transformNickname(player: Player): string {
-  let nickname = '';
+  let nickname = "";
   switch (player.rank) {
-    case 'Admin':
+    case "Admin":
       nickname = `§cAdmin ${player.nickname}`;
       break;
-    case 'Game Master':
+    case "Game Master":
       nickname = `§2[GM] ${player.nickname}`;
       break;
-    case 'VIP':
+    case "VIP":
       nickname = `§a[VIP] ${player.nickname}`;
       break;
-    case 'VIP+':
+    case "VIP+":
       nickname = `§a[VIP§6+§a] ${player.nickname}`;
       break;
-    case 'MVP':
+    case "MVP":
       nickname = `§b[MVP] ${player.nickname}`;
       break;
-    case 'MVP+':
+    case "MVP+":
       nickname = `§b[MVP${transormColor(player.plusColor)}+§b] ${
         player.nickname
       }`;
       break;
-    case 'MVP++':
+    case "MVP++":
       nickname = `§6[MVP${transormColor(player.plusColor)}++§6] ${
         player.nickname
       }`;
       break;
-    case 'YouTube':
+    case "YouTube":
       nickname = `§a[§7YT] ${player.nickname}`;
       break;
-    case 'MOJANG':
+    case "MOJANG":
       nickname = `§6[MOJANG] ${player.nickname}`;
       break;
-    case 'PIG+++':
+    case "PIG+++":
       nickname = `§d[PIG§b+++§d] ${player.nickname}`;
     default:
       nickname = `§7${player.nickname}`;
       break;
   }
-  return (nickname += '§r');
+  return (nickname += "§r");
 }
 
 /**
  * Thanks hypixel-api for not providing this one
  */
 export function transormColor(color: Color): string {
-  let transformed = '§';
+  let transformed = "§";
 
-  let colorCode = '';
+  let colorCode = "";
 
   try {
     colorCode = color.toCode();
   } catch {
-    colorCode = 'GRAY';
+    colorCode = "GRAY";
   }
 
   switch (colorCode) {
-    case 'BLACK':
-      transformed += '0';
+    case "BLACK":
+      transformed += "0";
       break;
-    case 'DARK_BLUE':
-      transformed += '1';
+    case "DARK_BLUE":
+      transformed += "1";
       break;
-    case 'DARK_GREEN':
-      transformed += '2';
+    case "DARK_GREEN":
+      transformed += "2";
       break;
-    case 'DARK_AQUA':
-      transformed += '3';
+    case "DARK_AQUA":
+      transformed += "3";
       break;
-    case 'DARK_RED':
-      transformed += '4';
+    case "DARK_RED":
+      transformed += "4";
       break;
-    case 'DARK_PURPLE':
-      transformed += '5';
+    case "DARK_PURPLE":
+      transformed += "5";
       break;
-    case 'GOLD':
-      transformed += '6';
+    case "GOLD":
+      transformed += "6";
       break;
-    case 'GRAY':
-      transformed += '7';
+    case "GRAY":
+      transformed += "7";
       break;
-    case 'DARK_GRAY':
-      transformed += '8';
+    case "DARK_GRAY":
+      transformed += "8";
       break;
-    case 'BLUE':
-      transformed += '9';
+    case "BLUE":
+      transformed += "9";
       break;
-    case 'GREEN':
-      transformed += 'a';
+    case "GREEN":
+      transformed += "a";
       break;
-    case 'AQUA':
-      transformed += 'b';
+    case "AQUA":
+      transformed += "b";
       break;
-    case 'RED':
-      transformed += 'c';
+    case "RED":
+      transformed += "c";
       break;
-    case 'LIGHT_PURPLE':
-      transformed += 'd';
+    case "LIGHT_PURPLE":
+      transformed += "d";
       break;
-    case 'YELLOW':
-      transformed += 'e';
+    case "YELLOW":
+      transformed += "e";
       break;
-    case 'WHITE':
-      transformed += 'f';
+    case "WHITE":
+      transformed += "f";
       break;
     default:
-      transformed += 'f';
+      transformed += "f";
       break;
   }
 
