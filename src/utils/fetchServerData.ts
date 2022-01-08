@@ -19,7 +19,7 @@ export default async function (
   });
 }
 
-function isNewPingResult(value: any): value is NewPingResult {
+function isNewPingResult(value: unknown): value is NewPingResult {
   return (
     value &&
     typeof value === 'object' &&

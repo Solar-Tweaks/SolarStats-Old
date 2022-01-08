@@ -11,7 +11,7 @@ stat.onTriggered = async (command: string): Promise<void> => {
   const slashCommand = args.shift();
    /* const playerName = args[0];  Unused for now */
 
-  let formattedStats: string;
+  let formattedStats = '';
 
   switch (args.length) {
     case 0:

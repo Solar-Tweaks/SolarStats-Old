@@ -5,7 +5,7 @@ export default function (
   mode: Mode
 ): { string: string; stats: { [key: string]: unknown } } {
   let string = `${playerData.formattedNickname} §7- `;
-  let stats;
+  let stats = null;
 
   switch (mode) {
     case 'DUELS_BRIDGE_DUEL':

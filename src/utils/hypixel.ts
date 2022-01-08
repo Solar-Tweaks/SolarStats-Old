@@ -51,7 +51,7 @@ export async function fetchPlayerLocation(uuid: string): Promise<Status> {
 }
 
 export function transformNickname(player: Player): string {
-  let nickname: string;
+  let nickname = '';
   switch (player.rank) {
     case 'Admin':
       nickname = `§cAdmin ${player.nickname}`;
@@ -99,7 +99,7 @@ export function transformNickname(player: Player): string {
 export function transormColor(color: Color): string {
   let transformed = '§';
 
-  let colorCode: string;
+  let colorCode = '';
 
   try {
     colorCode = color.toCode();

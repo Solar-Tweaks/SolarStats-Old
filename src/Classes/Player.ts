@@ -48,7 +48,7 @@ export default class Player {
       );
     });
 
-    this.listener.on('switch_server', async () => {
+    this.listener.on('switch_server', () => {
       this.playerList = [];
       fetchPlayerLocation(this.uuid)
         .then((status) => {
