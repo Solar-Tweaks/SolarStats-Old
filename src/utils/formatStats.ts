@@ -4,7 +4,7 @@ export default function (
   playerData: PlayerData,
   mode: Mode
 ): { string: string; stats: { [key: string]: unknown } } {
-  let string: string = `${playerData.formattedNickname} §7- `;
+  let string = `${playerData.formattedNickname} §7- `;
   let stats;
 
   switch (mode) {

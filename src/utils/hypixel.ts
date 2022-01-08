@@ -97,7 +97,7 @@ export function transformNickname(player: Player): string {
  * Thanks hypixel-api for not providing this one
  */
 export function transormColor(color: Color): string {
-  let transformed: string = '§';
+  let transformed = '§';
 
   let colorCode: string;
 

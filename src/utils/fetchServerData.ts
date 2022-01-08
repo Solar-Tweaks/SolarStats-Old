@@ -2,7 +2,7 @@ import { NewPingResult, ping } from 'minecraft-protocol';
 
 export default async function (
   host: string,
-  port: number = 25565
+  port = 25565
 ): Promise<NewPingResult> {
   return new Promise<NewPingResult>((resolve, reject) => {
     ping({ host, port, version: '1.18' }, (error, result) => {
