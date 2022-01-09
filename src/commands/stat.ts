@@ -9,7 +9,7 @@ const stat = new Command('stat', ['stats', 'st']);
 stat.onTriggered = async (command: string): Promise<void> => {
   const args = command.split(' ');
   const slashCommand = args.shift();
-   /* const playerName = args[0];  Unused for now */
+  /* const playerName = args[0];  Unused for now */
 
   let formattedStats = '';
 

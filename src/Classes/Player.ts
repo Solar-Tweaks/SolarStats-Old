@@ -129,48 +129,48 @@ export default class Player {
 
   public async dodge(stats?: string): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
-		this.sendMessage('§a§lDodging!', stats);
-		if (!this.status) {
-		  this.sendMessage('§cYou are not in a game!');
-		  return;
-		}
-		if (this.status.mode === 'LOBBY') {
-		  this.sendMessage('§cYou are not in a game!');
-		  return;
-		}
+      this.sendMessage('§a§lDodging!', stats);
+      if (!this.status) {
+        this.sendMessage('§cYou are not in a game!');
+        return;
+      }
+      if (this.status.mode === 'LOBBY') {
+        this.sendMessage('§cYou are not in a game!');
+        return;
+      }
 
-		this.executeCommand(`/play ${this.status.mode.toLowerCase()}`);
+      this.executeCommand(`/play ${this.status.mode.toLowerCase()}`);
 
-		let switched = false;
-		this.listener.once('switch_server', () => {
-		  switched = true;
-		  resolve(true);
-		});
+      let switched = false;
+      this.listener.once('switch_server', () => {
+        switched = true;
+        resolve(true);
+      });
 
-		const timeout = 2000;
-		setTimeout(() => {
-		  if (switched) return;
-		  resolve(false);
-		  this.sendMessage(
-			`§cSending you back to lobby because of timeout (${timeout}ms)!`
-		  );
+      const timeout = 2000;
+      setTimeout(() => {
+        if (switched) return;
+        resolve(false);
+        this.sendMessage(
+          `§cSending you back to lobby because of timeout (${timeout}ms)!`
+        );
 
-		  this.executeCommand('/lobby');
+        this.executeCommand('/lobby');
 
-		  switched = false;
-		  this.listener.once('switch_server', () => {
-			switched = true;
-		  });
+        switched = false;
+        this.listener.once('switch_server', () => {
+          switched = true;
+        });
 
-		  setTimeout(() => {
-			if (switched) return;
-			resolve(false);
-			this.client.end(
-			  `§cKicking you from Hypixel to prevent a dodge not working!\nYou see this message because Hypixel has not sent you to lobby in the last ${timeout}ms!`
-			);
-		  }, timeout);
-		}, timeout);
-	});
+        setTimeout(() => {
+          if (switched) return;
+          resolve(false);
+          this.client.end(
+            `§cKicking you from Hypixel to prevent a dodge not working!\nYou see this message because Hypixel has not sent you to lobby in the last ${timeout}ms!`
+          );
+        }, timeout);
+      }, timeout);
+    });
   }
 
   public sendMessage(
