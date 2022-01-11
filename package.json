@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/Solar-Tweaks/SolarStats#readme",
   "dependencies": {
-    "hypixel-api-reborn": "github:Solar-Tweaks/hypixel-api-reborn",
+    "hypixel-api-reborn": "^10.0.0",
     "minecraft-protocol": "^1.30.0",
     "prismarine-proxy": "^1.1.1"
   },
