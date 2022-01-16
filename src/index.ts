@@ -14,7 +14,7 @@ export const hypixelClient = new Client(config.api_key, {
   cache: true,
 });
 
-const server = 'localhost';
+const server = 'hypixel.net';
 
 const proxy = new InstantConnectProxy({
   loginHandler: (client) => ({
@@ -51,6 +51,8 @@ proxy.on('incoming', (data, meta, toClient) => {
 proxy.on('outgoing', (data, meta, toClient, toServer) => {
   // Handling chat packet in Classes/CommandHandler.ts
   if (meta.name === 'chat') return;
+  // Handling block place packet in Classes/Listener.ts
+  if (meta.name === 'block_place') return;
 
   toServer.write(meta.name, data);
 });

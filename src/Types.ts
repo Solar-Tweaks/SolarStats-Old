@@ -1,5 +1,5 @@
 import { Player as HypixelPlayer } from 'hypixel-api-reborn';
-import { Client } from 'minecraft-protocol';
+import { Client, ServerClient } from 'minecraft-protocol';
 
 export interface Config {
   api_key: string;
@@ -10,6 +10,7 @@ export interface Config {
     bestWinStreak: number;
     sendStats: boolean;
   };
+  heightLimitDelayFix: boolean;
 }
 
 export interface PlayerData {
@@ -48,6 +49,29 @@ export interface ListenerEvents {
   server_full: (playerCount: number) => void;
   player_join: (player: PlayerInfo) => void;
   player_leave: (uuid: string) => void;
+  place_block: (
+    packet: BlockPlacePacket,
+    toClient: ServerClient,
+    toServer: Client
+  ) => void;
+}
+
+export interface BlockPlacePacket {
+  location: {
+    x: number;
+    y: number;
+    z: number;
+  };
+  direction: number;
+  heldItem: {
+    blockId: number;
+    itemCount: number;
+    itemDamage: number;
+    nbtData: unknown;
+  };
+  cursorX: number;
+  cursorY: number;
+  cursorZ: number;
 }
 
 export type Command =
