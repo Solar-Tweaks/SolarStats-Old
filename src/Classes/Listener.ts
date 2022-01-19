@@ -58,5 +58,11 @@ export default class Listener extends (EventEmitter as new () => TypedEmitter<Li
         }
       }
     });
+
+    proxy.on('outgoing', (data, meta, toClient, toServer) => {
+      if (meta.name === 'block_place') {
+        this.emit('place_block', data, toClient, toServer);
+      }
+    });
   }
 }

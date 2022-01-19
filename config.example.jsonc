@@ -1,5 +1,5 @@
 {
-  "api_key": "",
+  "api_key": "", // Your Hypixel API key (`/api` in game)
   "dodge": {
     "enabled": true, // Whether or not to use auto dodge
     // (If false you will still be able to use the '/dodge' command)
@@ -8,5 +8,6 @@
     "winStreak": 10, // Player has a winstreak of 10 or more
     "bestWinStreak": 25, // Player's best winstreak is 25 or more
     "sendStats": false // Send stats even if the game has been dodged
-  }
+  },
+  "heightLimitDelayFix": true // Makes the delay before a block is removed when above the height ultra fast
 }
