@@ -22,17 +22,17 @@ At the root of the project (or in the same directory as the executable) create a
 
 ```json5
 {
-  "api_key": "", // Your Hypixel API key (`/api` in game)
-  "dodge": {
-    "enabled": true, // Whether or not to use auto dodge
+  api_key: '', // Your Hypixel API key (`/api` in game)
+  dodge: {
+    enabled: true, // Whether or not to use auto dodge
     // (If false you will still be able to use the '/dodge' command)
     // Dodge when:
-    "nicked": true, // Player is nicked
-    "winStreak": 10, // Player has a winstreak of 10 or more
-    "bestWinStreak": 25, // Player's best winstreak is 25 or more
-    "sendStats": false // Send stats even if the game has been dodged
+    nicked: true, // Player is nicked
+    winStreak: 10, // Player has a winstreak of 10 or more
+    bestWinStreak: 25, // Player's best winstreak is 25 or more
+    sendStats: false, // Send stats even if the game has been dodged
   },
-  "heightLimitDelayFix": true // Makes the delay before a block is removed when above the height ultra fast
+  heightLimitDelayFix: true, // Makes the delay before a block is removed when above the height ultra fast
 }
 ```
 
