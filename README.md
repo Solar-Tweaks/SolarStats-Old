@@ -20,6 +20,7 @@ To use it you need to have [NodeJS](https://nodejs.org/en/) installed. _(LTS ver
 
 At the root of the project (or in the same directory as the executable) create a `config.json` file with the following content: _(You can also find the content of this file in the `config.example.jsonc` file)_
 
+<!-- prettier-ignore-start -->
 ```json5
 {
   "api_key": "", // Your Hypixel API key (`/api` in game)
@@ -35,6 +36,7 @@ At the root of the project (or in the same directory as the executable) create a
   "heightLimitDelayFix": true // Makes the delay before a block is removed when above the height ultra fast
 }
 ```
+<!-- prettier-ignore-end -->
 
 ## Starting the server 🚀
 
