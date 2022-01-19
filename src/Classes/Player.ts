@@ -1,5 +1,9 @@
 import { Status } from 'hypixel-api-reborn';
 import { Client } from 'minecraft-protocol';
+import {
+  registerClient,
+  channel as lcChannel,
+} from '@solar-tweaks/minecraft-protocol-lunarclient';
 import { config } from '..';
 import { ChatMessage, Mode, PlayerInfo } from '../Types';
 import formatStats from '../utils/formatStats';
@@ -28,6 +32,20 @@ export default class Player {
     this.client = client;
     this.server = server;
     this.playerList = [];
+
+    registerClient(this.client);
+
+    this.client.writeChannel(lcChannel, {
+      id: 'teammates',
+      leader: '827f8c48-cdb2-4105-af39-df5a64f93490',
+      lastMs: 15,
+      players: [
+        {
+          player: '7642d15d-2aec-4be8-8cbe-99a53c434248',
+          posMap: [],
+        },
+      ],
+    });
 
     this.listener.on('server_full', async () => {
       await this.sendStats();
