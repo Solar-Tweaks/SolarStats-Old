@@ -4,10 +4,7 @@ import Listener from './Classes/Listener';
 import Player from './Classes/Player';
 import { readFileSync } from 'fs';
 import { Config } from './Types';
-import CommandHandler from './Classes/CommandHandler';
-import dodge from './commands/dodge';
-import reqeue from './commands/reqeue';
-
+import { version } from 'uuid';
 export const config: Config = JSON.parse(readFileSync('./config.json', 'utf8'));
 
 export const hypixelClient = new Client(config.api_key, {
@@ -36,13 +33,7 @@ const proxy = new InstantConnectProxy({
 console.log('Proxy started');
 
 export const listener = new Listener(proxy);
-export const player = new Player(listener);
-
-export const commandHandler = new CommandHandler(proxy);
-commandHandler.registerCommand([
-  dodge.setPlayer(player),
-  reqeue.setPlayer(player),
-]);
+export const player = new Player(listener, proxy);
 
 proxy.on('incoming', (data, meta, toClient) => {
   toClient.write(meta.name, data);
@@ -63,6 +54,10 @@ proxy.on('start', (client, server) => {
   if (!player.online) {
     console.log(`${client.username} connected to the proxy`);
     player.connect(client, server);
+
+    client.on('lunarclient:pm', (data) => {
+      console.log(data);
+    });
   }
 });
 

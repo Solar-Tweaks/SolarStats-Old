@@ -3,14 +3,8 @@ import { Client, ServerClient } from 'minecraft-protocol';
 
 export interface Config {
   api_key: string;
-  dodge: {
-    enabled: boolean;
-    nicked: boolean;
-    winStreak: number;
-    bestWinStreak: number;
-    sendStats: boolean;
-  };
   heightLimitDelayFix: boolean;
+  bedwarsWaypoints: boolean;
 }
 
 export interface PlayerData {
@@ -38,17 +32,12 @@ export type Mode =
 
 export interface PlayerInfo {
   UUID: string;
-  name: string;
-  gamemode: number;
-  ping: number;
-  displayName?: string;
+  entityID: number;
 }
 
 export interface ListenerEvents {
   switch_server: (toServer: Client) => void;
   server_full: (playerCount: number) => void;
-  player_join: (player: PlayerInfo) => void;
-  player_leave: (uuid: string) => void;
   place_block: (
     packet: BlockPlacePacket,
     toClient: ServerClient,
@@ -124,4 +113,19 @@ export interface ChatMessage {
     };
   };
   extra?: ChatMessage[];
+}
+
+export interface Waypoint {
+  name: string;
+  x: number;
+  y: number;
+  z: number;
+  color: number;
+}
+
+export interface WaypointsMappings {
+  [key: string]: {
+    modes: string[];
+    waypoints: Waypoint[];
+  }[];
 }

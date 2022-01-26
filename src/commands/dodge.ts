@@ -1,9 +1,9 @@
 import Command from '../Classes/Command';
 
-const dodge = new Command('dodge', ['d']);
+const command = new Command('dodge', ['d']);
 
-dodge.onTriggered = async (): Promise<void> => {
-  await dodge.player.dodge();
+command.onTriggered = async (): Promise<void> => {
+  await command.player.dodge();
 };
 
-export default dodge;
+export default command;

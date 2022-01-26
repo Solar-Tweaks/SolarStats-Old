@@ -5,10 +5,15 @@ import {
   channel as lcChannel,
 } from '@solar-tweaks/minecraft-protocol-lunarclient';
 import { config } from '..';
-import { ChatMessage, Mode, PlayerInfo } from '../Types';
-import formatStats from '../utils/formatStats';
-import { fetchPlayerData, fetchPlayerLocation } from '../utils/hypixel';
+import { ChatMessage, PlayerInfo, Waypoint } from '../Types';
+import { fetchPlayerLocation } from '../utils/hypixel';
 import Listener from './Listener';
+import CommandHandler from './CommandHandler';
+import { InstantConnectProxy } from 'prismarine-proxy';
+import dodge from '../commands/dodge';
+import requeue from '../commands/requeue';
+import stat from '../commands/stat';
+import WaypointsMappings from '../utils/WaypointsMappings';
 
 export default class Player {
   public online: boolean;
@@ -19,11 +24,19 @@ export default class Player {
   public lastGameMode?: string;
   public playerList: PlayerInfo[];
   public listener: Listener;
+  public dodgeing: boolean;
+  public loadedWaypoints: Waypoint[];
+  public teammates: string[];
 
-  public constructor(listener: Listener) {
+  public constructor(listener: Listener, proxy: InstantConnectProxy) {
     this.online = false;
-
     this.listener = listener;
+
+    new CommandHandler(proxy).registerCommand([
+      dodge.setPlayer(this),
+      requeue.setPlayer(this),
+      stat.setPlayer(this),
+    ]);
   }
 
   public connect(client: Client, server: Client): void {
@@ -31,44 +44,16 @@ export default class Player {
     this.uuid = client.uuid;
     this.client = client;
     this.server = server;
-    this.playerList = [];
+    this.loadedWaypoints = [];
+    this.teammates = [];
 
     registerClient(this.client);
+    this.sendNotification('Thanks for using Solar Stats!');
 
-    this.client.writeChannel(lcChannel, {
-      id: 'teammates',
-      leader: '827f8c48-cdb2-4105-af39-df5a64f93490',
-      lastMs: 15,
-      players: [
-        {
-          player: '7642d15d-2aec-4be8-8cbe-99a53c434248',
-          posMap: [],
-        },
-      ],
-    });
-
-    this.listener.on('server_full', async () => {
-      await this.sendStats();
-    });
-
-    this.listener.on('player_join', (playerInfo) => {
-      if (playerInfo.UUID !== this.uuid) {
-        const player = this.playerList.find((p) => p.UUID === playerInfo.UUID);
-        if (!player) {
-          this.playerList.push(playerInfo);
-        }
-      }
-    });
-
-    this.listener.on('player_leave', (uuid) => {
-      this.playerList = this.playerList.filter(
-        (player) => player.UUID !== uuid
-      );
-    });
-
-    this.listener.on('switch_server', () => {
+    this.listener.on('switch_server', async () => {
       this.playerList = [];
-      fetchPlayerLocation(this.uuid)
+      this.removeAllWaypoints();
+      await fetchPlayerLocation(this.uuid)
         .then((status) => {
           this.status = status;
 
@@ -78,6 +63,13 @@ export default class Player {
         .catch(() => {
           this.status = null;
         });
+
+      if (
+        config.bedwarsWaypoints &&
+        this.status.game.code === 'BEDWARS' &&
+        this.status.map
+      )
+        await this.loadBedwarsWaypoints();
     });
 
     this.listener.on('place_block', (packet, toClient, toServer) => {
@@ -133,107 +125,53 @@ export default class Player {
     this.status = null;
     this.lastGameMode = null;
     this.playerList = [];
+    this.dodgeing = false;
+    this.loadedWaypoints = [];
+    this.teammates = [];
 
-    this.listener.removeAllListeners('server_full');
-    this.listener.removeAllListeners('player_join');
-    this.listener.removeAllListeners('player_leave');
-    this.listener.removeAllListeners('switch_server');
+    this.listener.removeAllListeners();
   }
 
-  public async sendStats(): Promise<void> {
-    const formattedPlayers: string[] = [];
-
-    let dodged = false;
-    for (const player of this.playerList) {
-      const playerData = await fetchPlayerData(player.UUID);
-      if (playerData) {
-        // Returns here may cause a problem, if the server is full before the status is fetched
-        if (!this.status) return;
-        if (!this.status.mode) return;
-        if (playerData.status === this.status.mode) {
-          const formattedStats = formatStats(
-            playerData,
-            this.status.mode as Mode
-          );
-          formattedPlayers.push(formattedStats.string);
-
-          if (!formattedStats.stats) return;
-
-          if (
-            config.dodge.enabled &&
-            (config.dodge.winStreak <= formattedStats.stats.winstreak ||
-              config.dodge.bestWinStreak <= formattedStats.stats.bestWinstreak)
-          ) {
-            dodged = true;
-            await this.dodge(
-              `§aWe dodged this game for you because one\n§aor more player(s) have good stats.\n\n§7Stats required to dodge:\n §7- WS: At least §e§l${config.dodge.winStreak}\n §7- BWS: At least §e§l${config.dodge.bestWinStreak}\n\n${formattedStats.string}`
-            );
-          }
-        }
-      } else {
-        formattedPlayers.push('§cOne player is nicked!');
-
-        if (config.dodge.enabled && config.dodge.nicked) {
-          dodged = true;
-          await this.dodge(
-            '§aWe dodged this game for you because one\n§aor more player(s) were nicked.'
-          );
-        }
-      }
+  public async dodge(): Promise<void> {
+    if (!this.status) return;
+    if (!this.status.mode) return;
+    if (this.status.mode === 'LOBBY') return;
+    if (this.dodgeing) {
+      this.sendNotification("You're already dodging!", 'error');
+      return;
     }
+    this.dodgeing = true;
+    this.sendNotification('Dodging game...');
+    const command = `/play ${this.status.mode.toLocaleLowerCase()}`;
+    this.executeCommand('/lobby blitz');
+    await new Promise((resolve) => setTimeout(resolve, 2500));
+    this.executeCommand(command);
 
-    if (dodged && !config.dodge.sendStats) return;
-    this.sendMessage(
-      `§8§l§m-----------------§r§c§l Solar Stats §r§8§l§m-----------------§r\n\n${formattedPlayers.join(
-        '\n'
-      )}\n\n§8§l§m-----------------------------------------------`
-    );
+    let switched = false;
+    this.listener.once('switch_server', () => {
+      switched = true;
+    });
+
+    setTimeout(() => {
+      if (switched) {
+        this.dodgeing = false;
+        return;
+      }
+      this.executeCommand(command);
+    }, 2500);
   }
 
-  public async dodge(stats?: string): Promise<boolean> {
-    return new Promise<boolean>((resolve) => {
-      this.sendMessage('§a§lDodging!', stats);
-      if (!this.status) {
-        this.sendMessage('§cYou are not in a game!');
-        return;
-      }
-      if (this.status.mode === 'LOBBY') {
-        this.sendMessage('§cYou are not in a game!');
-        return;
-      }
-
-      this.executeCommand(`/play ${this.status.mode.toLowerCase()}`);
-
-      let switched = false;
-      this.listener.once('switch_server', () => {
-        switched = true;
-        resolve(true);
-      });
-
-      const timeout = 2000;
-      setTimeout(() => {
-        if (switched) return;
-        resolve(false);
-        this.sendMessage(
-          `§cSending you back to lobby because of timeout (${timeout}ms)!`
-        );
-
-        this.executeCommand('/lobby');
-
-        switched = false;
-        this.listener.once('switch_server', () => {
-          switched = true;
+  public async loadBedwarsWaypoints(): Promise<void> {
+    const map = this.status.map;
+    if (Object.prototype.hasOwnProperty.call(WaypointsMappings, map)) {
+      const mapMappings = WaypointsMappings[map].find((mapping) =>
+        mapping.modes.includes(this.status.mode)
+      );
+      if (mapMappings)
+        mapMappings.waypoints.forEach((waypoint) => {
+          this.addWaypoint(waypoint);
         });
-
-        setTimeout(() => {
-          if (switched) return;
-          resolve(false);
-          this.client.end(
-            `§cKicking you from Hypixel to prevent a dodge not working!\nYou see this message because Hypixel has not sent you to lobby in the last ${timeout}ms!`
-          );
-        }, timeout);
-      }, timeout);
-    });
+    }
   }
 
   public sendMessage(
@@ -249,7 +187,65 @@ export default class Player {
     this.client.write('chat', { message: JSON.stringify(message) });
   }
 
+  public sendNotification(
+    message: string,
+    level: 'error' | 'info' | 'success' | 'warning' = 'info',
+    durationMs = 5000
+  ): void {
+    this.client.writeChannel(lcChannel, {
+      id: 'notification',
+      message,
+      durationMs,
+      level,
+    });
+  }
+
   public executeCommand(command: string): void {
     this.server.write('chat', { message: command });
+  }
+
+  public addWaypoint(waypoint: Waypoint): void {
+    const loaded = this.loadedWaypoints.find((wp) => wp.name === waypoint.name);
+    if (loaded) return;
+    this.loadedWaypoints.push(waypoint);
+    this.client.writeChannel(lcChannel, {
+      id: 'waypoint_add',
+      name: waypoint.name,
+      world: '',
+      color: waypoint.color,
+      x: waypoint.x,
+      y: waypoint.y,
+      z: waypoint.z,
+      forced: false,
+      visible: true,
+    });
+  }
+
+  public removeWaypoint(waypointName: string): void {
+    const loaded = this.loadedWaypoints.find((wp) => wp.name === waypointName);
+    if (!loaded) return;
+    this.loadedWaypoints = this.loadedWaypoints.filter(
+      (wp) => wp.name !== waypointName
+    );
+    this.client.writeChannel(lcChannel, {
+      id: 'waypoint_remove',
+      name: waypointName,
+      world: '',
+    });
+  }
+
+  public removeAllWaypoints(): void {
+    this.loadedWaypoints.forEach((waypoint) => {
+      this.removeWaypoint(waypoint.name);
+    });
+    this.loadedWaypoints = [];
+  }
+
+  public spoofDisplayName(playerUuid: string, displayName: string): void {
+    this.client.write('player_info', {
+      action: 3,
+      uuid: playerUuid,
+      displayName,
+    });
   }
 }

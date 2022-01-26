@@ -7,16 +7,16 @@ import { player } from '..';
 export default class Listener extends (EventEmitter as new () => TypedEmitter<ListenerEvents>) {
   public constructor(proxy: InstantConnectProxy) {
     super();
-
     proxy.on('start', (toClient, toServer) => {
       if (player.online) this.emit('switch_server', toServer);
     });
 
-    proxy.on('incoming', (data, meta) => {
+    proxy.on('incoming', async (data, meta) => {
       // Chat packet
       if (meta.name === 'chat') {
         try {
           // Server Full
+          // Triggered when a message like "has joined (X/X)!"
           if (
             data.message.startsWith(
               '{"italic":false,"extra":[{"color":"yellow","text":""}'
@@ -35,26 +35,12 @@ export default class Listener extends (EventEmitter as new () => TypedEmitter<Li
               const maxPlayers = parseInt(
                 string.substring(0, string.length / 2)
               );
+              await new Promise((resolve) => setTimeout(resolve, 250));
               this.emit('server_full', maxPlayers);
             }
           }
         } catch (error) {
           console.error("Couldn't parse chat packet", error);
-        }
-      }
-
-      // Player Info packet
-      if (meta.name === 'player_info') {
-        // Player join
-        if (data.action === 0) {
-          this.emit('player_join', data.data[0]);
-        }
-
-        // Player leave
-        if (data.action === 4) {
-          try {
-            this.emit('player_leave', data.data[0].UUID);
-          } catch {}
         }
       }
     });

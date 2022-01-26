@@ -31,7 +31,7 @@ export async function fetchPlayerData(
 
         resolve(playerData);
       })
-      .catch(() => {
+      .catch((error) => {
         resolve(null);
       });
   });
