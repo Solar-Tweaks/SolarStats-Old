@@ -4,7 +4,6 @@ import Listener from './Classes/Listener';
 import Player from './Classes/Player';
 import { readFileSync } from 'fs';
 import { Config } from './Types';
-import { version } from 'uuid';
 export const config: Config = JSON.parse(readFileSync('./config.json', 'utf8'));
 
 export const hypixelClient = new Client(config.api_key, {

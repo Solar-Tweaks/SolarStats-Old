@@ -69,7 +69,7 @@ export default class Player {
         this.status.game.code === 'BEDWARS' &&
         this.status.map
       )
-        await this.loadBedwarsWaypoints();
+        this.loadBedwarsWaypoints();
     });
 
     this.listener.on('place_block', (packet, toClient, toServer) => {
@@ -161,7 +161,7 @@ export default class Player {
     }, 2500);
   }
 
-  public async loadBedwarsWaypoints(): Promise<void> {
+  public loadBedwarsWaypoints(): void {
     const map = this.status.map;
     if (Object.prototype.hasOwnProperty.call(WaypointsMappings, map)) {
       const mapMappings = WaypointsMappings[map].find((mapping) =>
