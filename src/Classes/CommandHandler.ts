@@ -16,13 +16,20 @@ export default class CommandHandler {
           return;
         }
 
+        const commandS = message.replace('/', '');
         const command = this.commands.find(
           (command) =>
-            command.name === message.replace('/', '') ||
-            command.aliases.includes(message.replace('/', ''))
+            command.name === commandS || command.aliases.includes(commandS)
         );
 
-        if (command) command.onTriggered(data.message);
+        const args: string[] = (data.message as string).split(' ');
+        args.shift();
+        if (!command.validateSyntax(message, args)) {
+          command.player.sendMessage(command.getSyntaxMessage());
+          return;
+        }
+
+        if (command) command.onTriggered(message, args);
         else console.log(`Command ${message} not found`);
       }
     });
