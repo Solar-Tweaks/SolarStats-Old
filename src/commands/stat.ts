@@ -4,7 +4,7 @@ import { Mode } from '../Types';
 import formatStats from '../utils/formatStats';
 import { fetchPlayerData } from '../utils/hypixel';
 
-const stat = new Command('stat', ['stats', 'st']);
+const stat = new Command('stat', [], ['stats', 'st']);
 
 stat.onTriggered = async (command: string): Promise<void> => {
   const args = command.split(' ');

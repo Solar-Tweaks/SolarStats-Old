@@ -1,6 +1,6 @@
 import Command from '../Classes/Command';
 
-const command = new Command('reqeue', ['rq', 'req']);
+const command = new Command('reqeue', [], ['rq', 'req']);
 
 command.onTriggered = () => {
   const lastGameMode = command.player.lastGameMode;
