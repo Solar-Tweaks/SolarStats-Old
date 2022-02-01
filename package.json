@@ -6,6 +6,7 @@
   "bin": "build/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "generateConfigSchema": "typescript-json-schema src/Types.ts Config",
     "build": "tsc",
     "package": "npm run build && pkg .",
     "start": "node ."
@@ -28,6 +29,7 @@
   "dependencies": {
     "@solar-tweaks/minecraft-protocol-lunarclient": "^1.0.0",
     "hypixel-api-reborn": "^10.0.0",
+    "jsonschema": "^1.4.0",
     "minecraft-protocol": "^1.30.0",
     "prismarine-proxy": "^1.1.1",
     "uuid": "^8.3.2"
@@ -37,7 +39,8 @@
     "@types/uuid": "^8.3.4",
     "pkg": "^4.4.9",
     "typed-emitter": "^1.4.0",
-    "typescript": "^4.5.4"
+    "typescript": "^4.5.4",
+    "typescript-json-schema": "^0.53.0"
   },
   "pkg": {
     "scripts": "build/**/*.js",

@@ -1,16 +1,12 @@
 import { InstantConnectProxy } from 'prismarine-proxy';
-import { Client } from 'hypixel-api-reborn';
+import { createClient } from './utils/hypixel';
 import Listener from './Classes/Listener';
 import Player from './Classes/Player';
-import { readFileSync } from 'fs';
-import { Config } from './Types';
-export const config: Config = JSON.parse(readFileSync('./config.json', 'utf8'));
+import getConfig from './utils/config';
 
-export const hypixelClient = new Client(config.api_key, {
-  cache: true,
-});
+export const config = getConfig();
 
-const server = 'hypixel.net';
+export const hypixelClient = createClient(config.apiKey);
 
 const proxy = new InstantConnectProxy({
   loginHandler: (client) => ({
@@ -26,7 +22,8 @@ const proxy = new InstantConnectProxy({
 
   clientOptions: {
     version: '1.8.9',
-    host: server,
+    host: config.server.host,
+    port: config.server.port,
   },
 });
 console.log('Proxy started');

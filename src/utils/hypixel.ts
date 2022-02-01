@@ -1,6 +1,23 @@
-import { Color, Player, Status } from 'hypixel-api-reborn';
+import { Client, Color, Player, Status } from 'hypixel-api-reborn';
 import { hypixelClient } from '..';
 import { PlayerData } from '../Types';
+
+export function createClient(apiKey: string): Client {
+  const client = new Client(apiKey, {
+    cache: true,
+    silent: true,
+    headers: {
+      // Just leaving our mark on Hypixel's servers logs
+      'User-Agent': 'Solar Stats | https://github.com/Solar-Tweaks/SolarStats',
+    },
+  });
+
+  client.getKeyInfo({ noCaching: true }).catch((error) => {
+    throw error;
+  });
+
+  return client;
+}
 
 export async function fetchPlayerData(
   playerOrUuid: string
@@ -93,9 +110,7 @@ export function transformNickname(player: Player): string {
   return (nickname += '§r');
 }
 
-/**
- * Thanks hypixel-api for not providing this one
- */
+// Thanks hypixel-api for not providing this one
 export function transormColor(color: Color): string {
   let transformed = '§';
 

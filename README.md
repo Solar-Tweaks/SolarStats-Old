@@ -26,7 +26,12 @@ At the root of the project (or in the same directory as the executable) create a
   "api_key": "", // Your Hypixel API key (`/api` in game)
   "heightLimitDelayFix": true, // Makes the delay before a block is removed when above the height ultra fast,
   "bedwarsWaypoints": true, // Enable waypoints for Bedwars
-  "lunarCooldowns": true // Enable Lunar cooldown mod (arrow in bridge for example)
+  "lunarCooldowns": true, // Enable Lunar cooldown mod (arrow in bridge for example)
+  "server": {
+    // Server to connect to
+    "host": "hypixel.net", // IP of the server
+    "port": 25565 // Port of the server
+  }
 }
 ```
 <!-- prettier-ignore-end -->

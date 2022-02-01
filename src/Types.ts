@@ -2,10 +2,14 @@ import { Player as HypixelPlayer } from 'hypixel-api-reborn';
 import { Client, ServerClient } from 'minecraft-protocol';
 
 export interface Config {
-  api_key: string;
+  apiKey: string;
   heightLimitDelayFix: boolean;
   bedwarsWaypoints: boolean;
   lunarCooldowns: boolean;
+  server: {
+    host: string;
+    port: number;
+  };
 }
 
 export interface PlayerData {
