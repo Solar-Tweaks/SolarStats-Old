@@ -3,6 +3,7 @@ import { createClient } from './utils/hypixel';
 import Listener from './Classes/Listener';
 import Player from './Classes/Player';
 import getConfig from './utils/config';
+import { ping } from 'minecraft-protocol';
 
 export const config = getConfig();
 
@@ -18,6 +19,15 @@ const proxy = new InstantConnectProxy({
     version: '1.8.9',
     motd: 'Hey, this is a test server!',
     port: 25556,
+    beforePing: async (response, client, callback) => {
+      response = await ping({
+        host: config.server.host,
+        port: config.server.port,
+        version: '1.8.9',
+      });
+      // @ts-ignore - Types are wrong, I'll remove this when they will accept my pull request
+      callback(null, response);
+    },
   },
 
   clientOptions: {
