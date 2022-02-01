@@ -1,5 +1,6 @@
 {
   "api_key": "", // Your Hypixel API key (`/api` in game)
   "heightLimitDelayFix": true, // Makes the delay before a block is removed when above the height ultra fast,
-  "bedwarsWaypoints": true // Enable waypoints for Bedwars
+  "bedwarsWaypoints": true, // Enable waypoints for Bedwars
+  "lunarCooldowns": true // Enable Lunar cooldown mod (arrow in bridge for example)
 }

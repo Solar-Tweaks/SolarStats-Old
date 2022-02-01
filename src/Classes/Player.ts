@@ -13,6 +13,7 @@ import { InstantConnectProxy } from 'prismarine-proxy';
 import dodge from '../commands/dodge';
 import requeue from '../commands/requeue';
 import stat from '../commands/stat';
+import dumpPackets from '../commands/dumpPackets';
 import WaypointsMappings from '../utils/WaypointsMappings';
 
 export default class Player {
@@ -27,15 +28,19 @@ export default class Player {
   public dodgeing: boolean;
   public loadedWaypoints: Waypoint[];
   public teammates: string[];
+  public cooldowns: string[];
+  public proxy: InstantConnectProxy;
 
   public constructor(listener: Listener, proxy: InstantConnectProxy) {
     this.online = false;
     this.listener = listener;
+    this.proxy = proxy;
 
     new CommandHandler(proxy).registerCommand([
       dodge.setPlayer(this),
       requeue.setPlayer(this),
       stat.setPlayer(this),
+      dumpPackets.setPlayer(this),
     ]);
   }
 
@@ -46,6 +51,7 @@ export default class Player {
     this.server = server;
     this.loadedWaypoints = [];
     this.teammates = [];
+    this.cooldowns = [];
 
     registerClient(this.client);
     this.sendNotification('Thanks for using Solar Stats!');
@@ -59,17 +65,17 @@ export default class Player {
 
           if (this.status.mode !== 'LOBBY')
             this.lastGameMode = this.status.mode;
+
+          if (
+            config.bedwarsWaypoints &&
+            this.status.game.code === 'BEDWARS' &&
+            this.status.map
+          )
+            this.loadBedwarsWaypoints();
         })
         .catch(() => {
           this.status = null;
         });
-
-      if (
-        config.bedwarsWaypoints &&
-        this.status.game.code === 'BEDWARS' &&
-        this.status.map
-      )
-        this.loadBedwarsWaypoints();
     });
 
     this.listener.on('place_block', (packet, toClient, toServer) => {
@@ -116,6 +122,18 @@ export default class Player {
       }
       toServer.write('block_place', packet);
     });
+
+    this.listener.on('arrow_slot_empty', () => {
+      if (config.lunarCooldowns && this.isInGameMode('DUELS_BRIDGE_')) {
+        this.setCooldown('hypixel_bow', 3500, 261);
+      }
+    });
+
+    this.listener.on('arrow_slot_filled', () => {
+      if (config.lunarCooldowns && this.isInGameMode('DUELS_BRIDGE_')) {
+        this.setCooldown('hypixel_bow', 0, 261);
+      }
+    });
   }
 
   public disconnect(): void {
@@ -128,6 +146,7 @@ export default class Player {
     this.dodgeing = false;
     this.loadedWaypoints = [];
     this.teammates = [];
+    this.cooldowns = [];
 
     this.listener.removeAllListeners();
   }
@@ -159,6 +178,11 @@ export default class Player {
       }
       this.executeCommand(command);
     }, 2500);
+  }
+
+  public isInGameMode(gamemode: string): boolean {
+    if (this.status) return this.status.mode.startsWith(gamemode);
+    else return false;
   }
 
   public loadBedwarsWaypoints(): void {
@@ -239,6 +263,43 @@ export default class Player {
       this.removeWaypoint(waypoint.name);
     });
     this.loadedWaypoints = [];
+  }
+
+  public setCooldown(
+    message: string,
+    durationMs: number,
+    iconId: number
+  ): void {
+    // Should work but it does not for some reason
+    // this.client.writeChannel(lcChannel, {
+    //   id: 'cooldown',
+    //   message,
+    //   durationMs: 2000,
+    //   iconId,
+    // });
+
+    // Manually building the packet
+    // This needs to be changed! This can't be used in production
+    let packet = '030b';
+    packet += Buffer.from(message, 'utf8').toString('hex');
+    packet += '000000000000';
+
+    const durationMsHex = durationMs.toString(16);
+    for (let index = 0; index < 4 - durationMsHex.length; index++) {
+      packet += '0';
+    }
+    packet += durationMsHex;
+
+    packet += '00000';
+    packet += iconId.toString(16);
+
+    if (durationMs > 0) this.cooldowns.push(message);
+    else this.cooldowns.splice(this.cooldowns.indexOf(message), 1);
+
+    this.client.write('custom_payload', {
+      channel: lcChannel,
+      data: Buffer.from(packet, 'hex'),
+    });
   }
 
   public spoofDisplayName(playerUuid: string, displayName: string): void {

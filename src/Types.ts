@@ -5,6 +5,7 @@ export interface Config {
   api_key: string;
   heightLimitDelayFix: boolean;
   bedwarsWaypoints: boolean;
+  lunarCooldowns: boolean;
 }
 
 export interface PlayerData {
@@ -43,6 +44,8 @@ export interface ListenerEvents {
     toClient: ServerClient,
     toServer: Client
   ) => void;
+  arrow_slot_empty: () => void;
+  arrow_slot_filled: () => void;
 }
 
 export interface BlockPlacePacket {
@@ -71,7 +74,11 @@ export type Command =
   | '/req'
   | '/stat'
   | '/stats'
-  | '/st';
+  | '/st'
+  | '/spawnfakeplayer'
+  | '/sfp'
+  | '/dumppackets'
+  | '/dp';
 
 export function isCommand(command: string): command is Command {
   return (
@@ -82,8 +89,20 @@ export function isCommand(command: string): command is Command {
     command === '/req' ||
     command === '/stat' ||
     command === '/stats' ||
-    command === '/st'
+    command === '/st' ||
+    command === '/spawnfakeplayer' ||
+    command === '/sfp' ||
+    command === '/dumppackets' ||
+    command === '/dp'
   );
+}
+
+export type CommandSyntaxType = 'string' | 'number' | 'json' | 'array';
+
+export interface CommandSyntax {
+  argument: string;
+  type: CommandSyntaxType;
+  required: boolean;
 }
 
 export interface ChatMessage {

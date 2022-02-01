@@ -53,10 +53,6 @@ proxy.on('start', (client, server) => {
   if (!player.online) {
     console.log(`${client.username} connected to the proxy`);
     player.connect(client, server);
-
-    client.on('lunarclient:pm', (data) => {
-      console.log(data);
-    });
   }
 });
 

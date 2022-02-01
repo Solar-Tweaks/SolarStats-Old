@@ -23,7 +23,12 @@ export default class Command {
   }
 
   public onTriggered(command: string, args: string[]): void {
-    console.warn(`Command ${command} not handled!`);
+    console.warn(
+      `Command ${command} not handled!`,
+      `Raw command: ${command}`,
+      'Arguments:',
+      args
+    );
   }
 
   public validateSyntax(command: string, args: string[]): boolean {

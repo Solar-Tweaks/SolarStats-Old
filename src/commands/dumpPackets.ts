@@ -20,8 +20,8 @@ const command = new Command(
 );
 
 command.onTriggered = (chatCommand, args) => {
-  const packets: { name: string; packet: unknown }[] = [];
-  let ignoredPackets: string[] = command.getArrayArgument(
+  const packets: { name: string; timestamp: string; packet: unknown }[] = [];
+  const ignoredPackets: string[] = command.getArrayArgument(
     args,
     1,
     true
@@ -29,7 +29,11 @@ command.onTriggered = (chatCommand, args) => {
 
   const callback = (data: unknown, packetMeta: PacketMeta) => {
     if (!ignoredPackets.includes(packetMeta.name))
-      packets.push({ name: packetMeta.name, packet: data });
+      packets.push({
+        name: packetMeta.name,
+        timestamp: Date.now().toString(),
+        packet: data,
+      });
   };
 
   const timeout = command.getNumberArgument(args, 0);

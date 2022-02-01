@@ -43,6 +43,21 @@ export default class Listener extends (EventEmitter as new () => TypedEmitter<Li
           console.error("Couldn't parse chat packet", error);
         }
       }
+
+      if (meta.name === 'set_slot') {
+        if (data.windowId === 0 && data.slot === 44) {
+          switch (data.item.blockId) {
+            case -1:
+              this.emit('arrow_slot_empty');
+              break;
+            case 262:
+              this.emit('arrow_slot_filled');
+              break;
+            default:
+              break;
+          }
+        }
+      }
     });
 
     proxy.on('outgoing', (data, meta, toClient, toServer) => {
