@@ -59,23 +59,7 @@ export default class Player {
     this.listener.on('switch_server', async () => {
       this.playerList = [];
       this.removeAllWaypoints();
-      await fetchPlayerLocation(this.uuid)
-        .then((status) => {
-          this.status = status;
-
-          if (this.status.mode !== 'LOBBY')
-            this.lastGameMode = this.status.mode;
-
-          if (
-            config.bedwarsWaypoints &&
-            this.status.game.code === 'BEDWARS' &&
-            this.status.map
-          )
-            this.loadBedwarsWaypoints();
-        })
-        .catch(() => {
-          this.status = null;
-        });
+      await this.refreshPlayerLocation();
     });
 
     this.listener.on('place_block', (packet, toClient, toServer) => {
@@ -134,6 +118,11 @@ export default class Player {
         this.setCooldown('hypixel_bow', 0, 261);
       }
     });
+
+    // In case the user reconnects to the server and is directly in a game
+    setTimeout(async () => {
+      await this.refreshPlayerLocation();
+    }, 1500);
   }
 
   public disconnect(): void {
@@ -149,6 +138,25 @@ export default class Player {
     this.cooldowns = [];
 
     this.listener.removeAllListeners();
+  }
+
+  public async refreshPlayerLocation(): Promise<void> {
+    await fetchPlayerLocation(this.uuid)
+      .then((status) => {
+        this.status = status;
+
+        if (this.status.mode !== 'LOBBY') this.lastGameMode = this.status.mode;
+
+        if (
+          config.bedwarsWaypoints &&
+          this.status.game.code === 'BEDWARS' &&
+          this.status.map
+        )
+          this.loadBedwarsWaypoints();
+      })
+      .catch(() => {
+        this.status = null;
+      });
   }
 
   public async dodge(): Promise<void> {
@@ -187,6 +195,9 @@ export default class Player {
 
   public loadBedwarsWaypoints(): void {
     const map = this.status.map;
+    const mapError = () => {
+      this.sendNotification(`Couldn't find waypoints for ${map}`, 'error');
+    };
     if (Object.prototype.hasOwnProperty.call(WaypointsMappings, map)) {
       const mapMappings = WaypointsMappings[map].find((mapping) =>
         mapping.modes.includes(this.status.mode)
@@ -195,7 +206,8 @@ export default class Player {
         mapMappings.waypoints.forEach((waypoint) => {
           this.addWaypoint(waypoint);
         });
-    }
+      else mapError();
+    } else mapError();
   }
 
   public sendMessage(
