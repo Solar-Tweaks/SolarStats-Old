@@ -138,12 +138,23 @@ export interface ChatMessage {
   extra?: ChatMessage[];
 }
 
+export enum WaypointColors {
+  RED = 0xff0000,
+  BLUE = 0x0000ff,
+  GREEN = 0x00ff00,
+  YELLOW = 0xffff00,
+  AQUA = 0x00ffff,
+  WHITE = 0xffffff,
+  PINK = 0xff00ff,
+  GRAY = 0x808080,
+}
+
 export interface Waypoint {
   name: string;
   x: number;
   y: number;
   z: number;
-  color: number;
+  color: WaypointColors;
 }
 
 export interface WaypointsMappings {

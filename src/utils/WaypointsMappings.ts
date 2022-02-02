@@ -1,4 +1,7 @@
-import { WaypointsMappings as _WaypointsMappings } from '../Types';
+import {
+  WaypointsMappings as _WaypointsMappings,
+  WaypointColors,
+} from '../Types';
 
 const WaypointsMappings: _WaypointsMappings = {
   Lighthouse: [
@@ -10,56 +13,56 @@ const WaypointsMappings: _WaypointsMappings = {
           x: -23.5,
           y: 66,
           z: -75.5,
-          color: 0xff0000,
+          color: WaypointColors.RED,
         },
         {
           name: 'Blue',
           x: 29.5,
           y: 66,
           z: -75.5,
-          color: 0x0000ff,
+          color: WaypointColors.BLUE,
         },
         {
           name: 'Green',
           x: 78.5,
           y: 66,
           z: -26.5,
-          color: 0x00ff00,
+          color: WaypointColors.GREEN,
         },
         {
           name: 'Yellow',
           x: 78.5,
           y: 66,
           z: 26.5,
-          color: 0xffff00,
+          color: WaypointColors.YELLOW,
         },
         {
           name: 'Aqua',
           x: 29.5,
           y: 66,
           z: 75.5,
-          color: 0x00ffff,
+          color: WaypointColors.AQUA,
         },
         {
           name: 'White',
           x: -23.5,
           y: 66,
           z: 75.5,
-          color: 0xffffff,
+          color: WaypointColors.WHITE,
         },
         {
           name: 'Pink',
           x: -72.5,
           y: 66,
           z: 26.5,
-          color: 0xff00ff,
+          color: WaypointColors.PINK,
         },
         {
           name: 'Gray',
           x: -72.5,
           y: 66,
           z: -26.5,
-          color: 0x808080,
+          color: WaypointColors.GRAY,
         },
       ],
     },
