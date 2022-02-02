@@ -4,6 +4,7 @@ import Listener from './Classes/Listener';
 import Player from './Classes/Player';
 import getConfig from './utils/config';
 import { ping } from 'minecraft-protocol';
+import { NIL } from 'uuid';
 
 export const config = getConfig();
 
@@ -23,8 +24,10 @@ const proxy = new InstantConnectProxy({
       response = await ping({
         host: config.server.host,
         port: config.server.port,
-        version: '1.8.9',
+        version: client.version,
       });
+      response.players.sample = [{ name: '§cSolar Stats Proxy', id: NIL }];
+
       // @ts-ignore - Types are wrong, I'll remove this when they will accept my pull request
       callback(null, response);
     },
