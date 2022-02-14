@@ -7,7 +7,6 @@ import { ping } from 'minecraft-protocol';
 import { NIL } from 'uuid';
 
 export const config = getConfig();
-
 export const hypixelClient = createClient(config.apiKey);
 
 const proxy = new InstantConnectProxy({
@@ -18,7 +17,7 @@ const proxy = new InstantConnectProxy({
 
   serverOptions: {
     version: '1.8.9',
-    motd: 'Hey, this is a test server!',
+    motd: '§cSolar Stats Proxy',
     port: 25556,
     beforePing: async (response, client, callback) => {
       response = await ping({
@@ -45,14 +44,15 @@ export const listener = new Listener(proxy);
 export const player = new Player(listener, proxy);
 
 proxy.on('incoming', (data, meta, toClient) => {
+  if (player.overriddenPackets.incoming.includes(meta.name)) return;
+
   toClient.write(meta.name, data);
 });
 
 proxy.on('outgoing', (data, meta, toClient, toServer) => {
-  // Handling chat packet in Classes/CommandHandler.ts
-  if (meta.name === 'chat') return;
-  // Handling block place packet in Classes/Listener.ts
-  if (meta.name === 'block_place') return;
+  if (player.overriddenPackets.outgoing.includes(meta.name)) return;
+  // Custom inventories
+  if (meta.name === 'window_click' && data.windowId === 255) return;
 
   toServer.write(meta.name, data);
 });

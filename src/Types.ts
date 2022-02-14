@@ -82,24 +82,8 @@ export type Command =
   | '/spawnfakeplayer'
   | '/sfp'
   | '/dumppackets'
-  | '/dp';
-
-export function isCommand(command: string): command is Command {
-  return (
-    command === '/d' ||
-    command === '/dodge' ||
-    command === '/reqeue' ||
-    command === '/rq' ||
-    command === '/req' ||
-    command === '/stat' ||
-    command === '/stats' ||
-    command === '/st' ||
-    command === '/spawnfakeplayer' ||
-    command === '/sfp' ||
-    command === '/dumppackets' ||
-    command === '/dp'
-  );
-}
+  | '/dp'
+  | '/crashtest';
 
 export type CommandSyntaxType = 'string' | 'number' | 'json' | 'array';
 
@@ -162,4 +146,57 @@ export interface WaypointsMappings {
     modes: string[];
     waypoints: Waypoint[];
   }[];
+}
+
+export enum InventoryType {
+  ANVIL = 'minecraft:anvil',
+  BEACON = 'minecraft:beacon',
+  BREWING = 'minecraft:brewing_stand',
+  CHEST = 'minecraft:chest',
+  CONTAINER = 'minecraft:container',
+  CRAFTING = 'minecraft:crafting_table',
+  DISPENSER = 'minecraft:dispenser',
+  DROPPER = 'minecraft:dropper',
+  ENCHANTING_TABLE = 'minecraft:enchanting_table',
+  FURNACE = 'minecraft:furnace',
+  HOPPER = 'minecraft:hopper',
+  VILLAGER = 'minecraft:villager',
+}
+
+export interface InventoryEvents {
+  close: () => void;
+  click: (
+    slot: number,
+    button: number,
+    packet: unknown,
+    toServer: Client
+  ) => void;
+}
+
+export interface Slot {
+  blockId: number;
+  itemCount: number;
+  itemDamage?: number;
+  nbtData?: {
+    type: 'compound';
+    name: '';
+    value: {
+      display?: {
+        type: 'compound';
+        value: {
+          Lore?: {
+            type: 'list';
+            value: {
+              type: 'string';
+              value: string[];
+            };
+          };
+          Name?: {
+            type: 'string';
+            value: string;
+          };
+        };
+      };
+    };
+  };
 }

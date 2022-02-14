@@ -1,17 +1,18 @@
 import { InstantConnectProxy } from 'prismarine-proxy';
-import { isCommand } from '../Types';
 import Command from './Command';
 
 export default class CommandHandler {
   public commands: Command[];
+  public commandsList: string[];
 
   public constructor(proxy: InstantConnectProxy) {
     this.commands = [];
+    this.commandsList = [];
 
     proxy.on('outgoing', (data, meta, toClient, toServer) => {
       if (meta.name === 'chat') {
-        const message = data.message.toLowerCase().split(' ')[0];
-        if (!isCommand(message)) {
+        const message: string = data.message.toLowerCase().split(' ')[0];
+        if (!this.commandsList.includes(message)) {
           toServer.write(meta.name, data);
           return;
         }
@@ -38,8 +39,16 @@ export default class CommandHandler {
   public registerCommand(command: Command | Command[]): void {
     if (!Array.isArray(command)) {
       this.commands.push(command);
+      this.commandsList.push(`/${command.name}`);
+      this.commandsList.push(...command.aliases);
     } else {
       this.commands = this.commands.concat(command);
+      this.commandsList = this.commandsList.concat(
+        command.map((c) => `/${c.name}`)
+      );
+      command.forEach((command) => {
+        command.aliases.forEach((c) => this.commandsList.push(`/${c}`));
+      });
     }
   }
 

@@ -25,16 +25,23 @@ export default class Player {
   public lastGameMode?: string;
   public playerList: PlayerInfo[];
   public listener: Listener;
-  public dodgeing: boolean;
+  public dodging: boolean;
   public loadedWaypoints: Waypoint[];
   public teammates: string[];
   public cooldowns: string[];
+  public overriddenPackets: { incoming: string[]; outgoing: string[] };
   public proxy: InstantConnectProxy;
 
   public constructor(listener: Listener, proxy: InstantConnectProxy) {
     this.online = false;
     this.listener = listener;
     this.proxy = proxy;
+
+    // Packets that have a custom handling
+    this.overriddenPackets = {
+      incoming: [],
+      outgoing: ['chat', 'block_place'],
+    };
 
     new CommandHandler(proxy).registerCommand([
       dodge.setPlayer(this),
@@ -132,7 +139,7 @@ export default class Player {
     this.status = null;
     this.lastGameMode = null;
     this.playerList = [];
-    this.dodgeing = false;
+    this.dodging = false;
     this.loadedWaypoints = [];
     this.teammates = [];
     this.cooldowns = [];
@@ -163,11 +170,11 @@ export default class Player {
     if (!this.status) return;
     if (!this.status.mode) return;
     if (this.status.mode === 'LOBBY') return;
-    if (this.dodgeing) {
+    if (this.dodging) {
       this.sendNotification("You're already dodging!", 'error');
       return;
     }
-    this.dodgeing = true;
+    this.dodging = true;
     this.sendNotification('Dodging game...');
     const command = `/play ${this.status.mode.toLocaleLowerCase()}`;
     this.executeCommand('/lobby blitz');
@@ -181,7 +188,7 @@ export default class Player {
 
     setTimeout(() => {
       if (switched) {
-        this.dodgeing = false;
+        this.dodging = false;
         return;
       }
       this.executeCommand(command);
