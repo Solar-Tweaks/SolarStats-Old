@@ -50,6 +50,10 @@ export interface ListenerEvents {
   ) => void;
   arrow_slot_empty: () => void;
   arrow_slot_filled: () => void;
+  team_create: (name: string) => void;
+  team_delete: (name: string) => void;
+  team_edit: (data: unknown) => void;
+  team_player_add: (name: string, players: string[]) => void;
 }
 
 export interface BlockPlacePacket {
@@ -199,4 +203,9 @@ export interface Slot {
       };
     };
   };
+}
+
+export interface Team {
+  name: string;
+  players: string[];
 }

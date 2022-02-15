@@ -5,7 +5,7 @@ import {
   channel as lcChannel,
 } from '@solar-tweaks/minecraft-protocol-lunarclient';
 import { config } from '..';
-import { ChatMessage, PlayerInfo, Waypoint } from '../Types';
+import { ChatMessage, PlayerInfo, Team, Waypoint } from '../Types';
 import { fetchPlayerLocation } from '../utils/hypixel';
 import Listener from './Listener';
 import CommandHandler from './CommandHandler';
@@ -15,6 +15,7 @@ import requeue from '../commands/requeue';
 import stat from '../commands/stat';
 import dumpPackets from '../commands/dumpPackets';
 import WaypointsMappings from '../utils/WaypointsMappings';
+import axios from 'axios';
 
 export default class Player {
   public online: boolean;
@@ -29,6 +30,7 @@ export default class Player {
   public loadedWaypoints: Waypoint[];
   public teammates: string[];
   public cooldowns: string[];
+  public teams: Team[];
   public overriddenPackets: { incoming: string[]; outgoing: string[] };
   public proxy: InstantConnectProxy;
 
@@ -59,14 +61,17 @@ export default class Player {
     this.loadedWaypoints = [];
     this.teammates = [];
     this.cooldowns = [];
+    this.teams = [];
 
     registerClient(this.client);
     this.sendNotification('Thanks for using Solar Stats!');
 
     this.listener.on('switch_server', async () => {
       this.playerList = [];
+      this.teams = [];
       this.removeAllWaypoints();
       await this.refreshPlayerLocation();
+      await this.sendTeammates();
     });
 
     this.listener.on('place_block', (packet, toClient, toServer) => {
@@ -126,6 +131,53 @@ export default class Player {
       }
     });
 
+    this.listener.on('team_create', (name) => {
+      const existingTeam = this.teams.find((team) => team.name === name);
+      if (existingTeam) return;
+      this.teams.push({
+        name,
+        players: [],
+      });
+    });
+
+    this.listener.on('team_delete', (name) => {
+      this.teams = this.teams.filter((team) => team.name !== name);
+    });
+
+    this.listener.on('team_player_add', (name, players) => {
+      this.teams.find((team) => team.name === name)?.players.push(...players);
+
+      const playerTeam = this.teams.find((team) =>
+        team.players.includes(this.client.username)
+      );
+
+      if (!playerTeam) return;
+      if (playerTeam?.name !== name) return;
+
+      const bedwarsTeams = [
+        'Red',
+        'Blue',
+        'Green',
+        'Yellow',
+        'Aqua',
+        'White',
+        'Pink',
+        'Gray',
+      ];
+      bedwarsTeams.forEach(async (bedwarsTeam) => {
+        if (!playerTeam.name.startsWith(bedwarsTeam)) return;
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        const allTeams = this.teams.filter((team) =>
+          team.name.startsWith(bedwarsTeam)
+        );
+        allTeams.forEach((team) => {
+          this.teammates = this.teammates.concat(team.players);
+        });
+        await this.sendTeammates();
+      });
+    });
+
     // In case the user reconnects to the server and is directly in a game
     setTimeout(async () => {
       await this.refreshPlayerLocation();
@@ -143,6 +195,7 @@ export default class Player {
     this.loadedWaypoints = [];
     this.teammates = [];
     this.cooldowns = [];
+    this.teams = [];
 
     this.listener.removeAllListeners();
   }
@@ -326,6 +379,44 @@ export default class Player {
       action: 3,
       uuid: playerUuid,
       displayName,
+    });
+  }
+
+  public async sendTeammates(): Promise<void> {
+    const players = [];
+    for (const playerName of this.teammates) {
+      // This needs to be changed!
+      // We should use the player_info packet instead of making a request to Mojang
+      const response = await axios
+        .get(`https://api.mojang.com/users/profiles/minecraft/${playerName}`)
+        .catch(() => {
+          // Ignoring fake players
+        });
+      if (!response) return;
+      players.push({
+        player:
+          response.data.id.substr(0, 8) +
+          '-' +
+          response.data.id.substr(8, 4) +
+          '-' +
+          response.data.id.substr(12, 4) +
+          '-' +
+          response.data.id.substr(16, 4) +
+          '-' +
+          response.data.id.substr(20),
+        posMap: [
+          { key: 'x', value: 0 },
+          { key: 'y', value: 0 },
+          { key: 'z', value: 0 },
+        ],
+      });
+    }
+
+    this.client.writeChannel(lcChannel, {
+      id: 'teammates',
+      leader: this.client.uuid,
+      lastMs: 0,
+      players,
     });
   }
 }

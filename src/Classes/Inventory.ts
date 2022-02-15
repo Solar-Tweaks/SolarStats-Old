@@ -20,7 +20,7 @@ export default class Inventory extends (EventEmitter as new () => TypedEmitter<I
 
   public constructor(
     inventoryType: InventoryType,
-    title: string = 'Inventory',
+    title = 'Inventory',
     slotCount = 27
   ) {
     super();

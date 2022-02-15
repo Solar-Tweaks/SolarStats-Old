@@ -58,6 +58,24 @@ export default class Listener extends (EventEmitter as new () => TypedEmitter<Li
           }
         }
       }
+
+      if (meta.name === 'scoreboard_team') {
+        switch (data.mode) {
+          case 0:
+            this.emit('team_create', data.team);
+            break;
+          case 1:
+            this.emit('team_delete', data.team);
+            break;
+          case 2:
+            this.emit('team_edit', data);
+            break;
+          case 3:
+            this.emit('team_player_add', data.team, data.players);
+          default:
+            break;
+        }
+      }
     });
 
     proxy.on('outgoing', (data, meta, toClient, toServer) => {

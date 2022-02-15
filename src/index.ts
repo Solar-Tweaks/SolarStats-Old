@@ -27,7 +27,6 @@ const proxy = new InstantConnectProxy({
       });
       response.players.sample = [{ name: '§cSolar Stats Proxy', id: NIL }];
 
-      // @ts-ignore - Types are wrong, I'll remove this when they will accept my pull request
       callback(null, response);
     },
   },
