@@ -6,6 +6,7 @@ export interface Config {
   heightLimitDelayFix: boolean;
   bedwarsWaypoints: boolean;
   lunarCooldowns: boolean;
+  bedwarsTeammates: boolean;
   server: {
     host: string;
     port: number;

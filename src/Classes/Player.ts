@@ -131,52 +131,54 @@ export default class Player {
       }
     });
 
-    this.listener.on('team_create', (name) => {
-      const existingTeam = this.teams.find((team) => team.name === name);
-      if (existingTeam) return;
-      this.teams.push({
-        name,
-        players: [],
-      });
-    });
-
-    this.listener.on('team_delete', (name) => {
-      this.teams = this.teams.filter((team) => team.name !== name);
-    });
-
-    this.listener.on('team_player_add', (name, players) => {
-      this.teams.find((team) => team.name === name)?.players.push(...players);
-
-      const playerTeam = this.teams.find((team) =>
-        team.players.includes(this.client.username)
-      );
-
-      if (!playerTeam) return;
-      if (playerTeam?.name !== name) return;
-
-      const bedwarsTeams = [
-        'Red',
-        'Blue',
-        'Green',
-        'Yellow',
-        'Aqua',
-        'White',
-        'Pink',
-        'Gray',
-      ];
-      bedwarsTeams.forEach(async (bedwarsTeam) => {
-        if (!playerTeam.name.startsWith(bedwarsTeam)) return;
-
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        const allTeams = this.teams.filter((team) =>
-          team.name.startsWith(bedwarsTeam)
-        );
-        allTeams.forEach((team) => {
-          this.teammates = this.teammates.concat(team.players);
+    if (config.bedwarsTeammates) {
+      this.listener.on('team_create', (name) => {
+        const existingTeam = this.teams.find((team) => team.name === name);
+        if (existingTeam) return;
+        this.teams.push({
+          name,
+          players: [],
         });
-        await this.sendTeammates();
       });
-    });
+
+      this.listener.on('team_delete', (name) => {
+        this.teams = this.teams.filter((team) => team.name !== name);
+      });
+
+      this.listener.on('team_player_add', (name, players) => {
+        this.teams.find((team) => team.name === name)?.players.push(...players);
+
+        const playerTeam = this.teams.find((team) =>
+          team.players.includes(this.client.username)
+        );
+
+        if (!playerTeam) return;
+        if (playerTeam?.name !== name) return;
+
+        const bedwarsTeams = [
+          'Red',
+          'Blue',
+          'Green',
+          'Yellow',
+          'Aqua',
+          'White',
+          'Pink',
+          'Gray',
+        ];
+        bedwarsTeams.forEach(async (bedwarsTeam) => {
+          if (!playerTeam.name.startsWith(bedwarsTeam)) return;
+
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          const allTeams = this.teams.filter((team) =>
+            team.name.startsWith(bedwarsTeam)
+          );
+          allTeams.forEach((team) => {
+            this.teammates = this.teammates.concat(team.players);
+          });
+          await this.sendTeammates();
+        });
+      });
+    }
 
     // In case the user reconnects to the server and is directly in a game
     setTimeout(async () => {

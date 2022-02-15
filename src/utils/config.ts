@@ -40,6 +40,9 @@ export const configSchema = {
     apiKey: {
       type: 'string',
     },
+    bedwarsTeammates: {
+      type: 'boolean',
+    },
     bedwarsWaypoints: {
       type: 'boolean',
     },
@@ -69,6 +72,7 @@ export const defaultConfig: Config = {
   bedwarsWaypoints: true,
   heightLimitDelayFix: true,
   lunarCooldowns: true,
+  bedwarsTeammates: true,
   server: {
     host: 'hypixel.net',
     port: 25565,
