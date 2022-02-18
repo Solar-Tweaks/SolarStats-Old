@@ -23,10 +23,11 @@ At the root of the project (or in the same directory as the executable) create a
 <!-- prettier-ignore-start -->
 ```json5
 {
-  "api_key": "", // Your Hypixel API key (`/api` in game)
+  "apiKey": "", // Your Hypixel API key (`/api` in game)
   "heightLimitDelayFix": true, // Makes the delay before a block is removed when above the height ultra fast,
   "bedwarsWaypoints": true, // Enable waypoints for Bedwars
   "lunarCooldowns": true, // Enable Lunar cooldown mod (arrow in bridge for example)
+  "bedwarsTeammates": true, // Make the TeamView mod work for Bedwars
   "server": {
     // Server to connect to
     "host": "hypixel.net", // IP of the server
