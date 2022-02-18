@@ -4,7 +4,7 @@ import { InstantConnectProxy } from 'prismarine-proxy';
 import TypedEmitter from 'typed-emitter';
 import { InventoryEvents, InventoryType } from '../Types';
 import Item from './Item';
-import Player from './Player';
+import Player from '../player/Player';
 
 export default class Inventory extends (EventEmitter as new () => TypedEmitter<InventoryEvents>) {
   public items: { [key: string]: Item };

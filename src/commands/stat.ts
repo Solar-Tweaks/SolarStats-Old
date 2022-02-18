@@ -1,5 +1,5 @@
 import Command from '../Classes/Command';
-import Player from '../Classes/Player';
+import Player from '../player/Player';
 import { Mode } from '../Types';
 import formatStats from '../utils/formatStats';
 import { fetchPlayerData } from '../utils/hypixel';

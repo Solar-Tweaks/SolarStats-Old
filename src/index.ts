@@ -1,7 +1,7 @@
 import { InstantConnectProxy } from 'prismarine-proxy';
 import { createClient } from './utils/hypixel';
 import Listener from './Classes/Listener';
-import Player from './Classes/Player';
+import Player from './player/Player';
 import getConfig from './utils/config';
 import { ping } from 'minecraft-protocol';
 import { NIL } from 'uuid';
