@@ -16,8 +16,6 @@ export default class Inventory extends (EventEmitter as new () => TypedEmitter<I
   public incomingPacketHandler: (data, meta) => void;
   public outgoingPacketHandler: (data, meta, toClient, toServer) => void;
 
-  private alreadyOpened: boolean;
-
   public constructor(
     inventoryType: InventoryType,
     title = 'Inventory',
@@ -29,12 +27,17 @@ export default class Inventory extends (EventEmitter as new () => TypedEmitter<I
     this.title = title;
     this.slotCount = slotCount;
     this.opened = false;
-    this.alreadyOpened = false;
   }
 
   public addItem(item: Item, position?: number): void {
     const finalPosition = position || Object.keys(this.items).length;
     this.items[finalPosition.toString()] = item;
+  }
+
+  public addItems(items: { item: Item; position?: number }[]): void {
+    for (const item of items) {
+      this.addItem(item.item, item.position);
+    }
   }
 
   public removeItem(position: number): void {
@@ -46,14 +49,14 @@ export default class Inventory extends (EventEmitter as new () => TypedEmitter<I
   }
 
   public display(player: Player): void {
+    this.opened = true;
     player.client.write('open_window', {
-      windowId: 255,
+      windowId: 50,
       inventoryType: this.type,
       windowTitle: `{"translate":"${this.title}"}`,
       slotCount: this.slotCount,
       entityId: undefined,
     });
-    this.opened = true;
 
     const items = [];
 
@@ -67,16 +70,13 @@ export default class Inventory extends (EventEmitter as new () => TypedEmitter<I
     }
 
     player.client.write('window_items', {
-      windowId: 255,
+      windowId: 50,
       items,
     });
 
-    if (this.alreadyOpened) return;
     this.setupPacketHandlers(player.proxy);
     player.proxy.on('incoming', this.incomingPacketHandler);
     player.proxy.on('outgoing', this.outgoingPacketHandler);
-
-    this.alreadyOpened = true;
   }
 
   public close(player: Player): void {
@@ -84,7 +84,15 @@ export default class Inventory extends (EventEmitter as new () => TypedEmitter<I
 
     this.markAsClosed(player.proxy);
     player.client.write('close_window', {
-      windowId: 255,
+      windowId: 50,
+    });
+  }
+
+  public setSlot(client: Client, item: Item, slot: number) {
+    client.write('set_slot', {
+      windowId: 50,
+      slot,
+      item: item.slotRepresentation,
     });
   }
 
@@ -108,20 +116,36 @@ export default class Inventory extends (EventEmitter as new () => TypedEmitter<I
       toServer: Client
     ) => {
       if (meta.name === 'close_window')
-        if (data.windowId === 255 && this.opened) this.markAsClosed(proxy);
+        if (data.windowId === 50 && this.opened) this.markAsClosed(proxy);
 
       if (meta.name === 'window_click') {
         if (
-          data.windowId === 255 &&
+          data.windowId === 50 &&
           this.opened &&
           data.slot < this.slotCount &&
           data.slot !== -999
         ) {
-          this.emit('click', data.slot, data.mouseButton, data, toServer);
+          this.emit('click', {
+            button: data.mouseButton,
+            mode: data.mode,
+            slot: data.slot,
+            toServer: toServer,
+            raw: data,
+            cancel: (client: Client) => {
+              client.write('set_slot', {
+                windowId: -1,
+                slot: -1,
+                item: Item.emptyItem,
+              });
+              client.write('set_slot', {
+                windowId: 50,
+                slot: data.slot,
+                item: data.item,
+              });
+            },
+          });
         } else if (data.slot !== -999) {
           // click is in the player inventory not in the GUI
-          console.log('click in player inventory');
-
           // We need to cancel the click because the user can't modify to their real inventories while in the GUI
         }
       }

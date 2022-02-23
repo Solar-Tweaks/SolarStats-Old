@@ -1,13 +1,11 @@
 import { validate } from 'jsonschema';
 import { Config } from '../Types';
 import { existsSync, writeFileSync, readFileSync } from 'fs';
+import { writeFile, readFile } from 'fs/promises';
+
+const filePath = './config.json';
 
 export default function getConfig(): Config {
-  // Everything is synchronous because it's easier
-  // It doesn't really matter since it's done only once at startup
-
-  const filePath = './config.json';
-
   const exists = existsSync(filePath);
 
   if (!exists) {
@@ -17,6 +15,32 @@ export default function getConfig(): Config {
     writeFileSync(filePath, JSON.stringify(defaultConfig, null, 2));
   }
 
+  return readConfigSync();
+}
+
+export async function setValue(key: string, value: unknown): Promise<void> {
+  const config = JSON.parse(await readFile(filePath, 'utf8'));
+  config[key] = value;
+  await writeFile(filePath, JSON.stringify(config, null, 2));
+}
+
+export async function readConfig(): Promise<Config> {
+  const data = await readFile(filePath, 'utf8');
+
+  try {
+    const parsed = JSON.parse(data);
+    if (validate(parsed, configSchema).valid) {
+      return parsed;
+    } else {
+      throw new Error("Can't validate config file");
+    }
+  } catch (error) {
+    console.error('Error while processing config file');
+    throw error;
+  }
+}
+
+export function readConfigSync(): Config {
   const data = readFileSync(filePath, 'utf8');
 
   try {

@@ -46,7 +46,7 @@ export default class Command {
 
     for (let i = 0; i < optionalArgsCount; i++) {
       const syntax = this.syntax[requiredArgsCount + i];
-
+      if (!syntax) return false;
       if (!this.validateType(args[requiredArgsCount + i], syntax.type))
         return false;
     }
@@ -60,7 +60,9 @@ export default class Command {
       if (syntax.required) args.push(`<${syntax.argument}>`);
       else args.push(`[${syntax.argument}]`);
     });
-    return `§cSyntax: /${this.name} ${args.join(' ')}`;
+    return `§cSyntax: /${this.name} ${args.join(
+      ' '
+    )}\n§cAliases: ${this.aliases.join(', ')}`;
   }
 
   public getStringArgument(

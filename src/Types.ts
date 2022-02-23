@@ -98,35 +98,6 @@ export interface CommandSyntax {
   required: boolean;
 }
 
-export interface ChatMessage {
-  text: string;
-  bold?: boolean;
-  italic?: boolean;
-  underlined?: boolean;
-  strikethrough?: boolean;
-  obfuscated?: boolean;
-  font?: 'minecraft:uniform' | 'minecraft:alt' | 'minecraft:default';
-  color?: string;
-  insertion?: string;
-  clickEvent?: {
-    action:
-      | 'open_url'
-      | 'run_command'
-      | 'suggest_command'
-      | 'change_page'
-      | 'copy_to_clipboard';
-    value: string;
-  };
-  hoverEvent?: {
-    action: 'show_text' | 'show_item' | 'show_entity';
-    value: {
-      text: string;
-      extra?: ChatMessage[];
-    };
-  };
-  extra?: ChatMessage[];
-}
-
 export interface WaypointsMappings {
   [key: string]: {
     modes: string[];
@@ -151,12 +122,16 @@ export enum InventoryType {
 
 export interface InventoryEvents {
   close: () => void;
-  click: (
-    slot: number,
-    button: number,
-    packet: unknown,
-    toServer: Client
-  ) => void;
+  click: (event: WindowClickEvent) => void;
+}
+
+export interface WindowClickEvent {
+  slot: number;
+  button: number;
+  mode: number;
+  raw: unknown;
+  toServer: Client;
+  cancel: (client: Client) => void;
 }
 
 export interface Slot {

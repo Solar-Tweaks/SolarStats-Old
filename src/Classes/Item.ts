@@ -48,6 +48,7 @@ export default class Item {
   }
 
   public set displayName(value: string) {
+    if (!value) return;
     this._displayName = value;
 
     if (
@@ -66,6 +67,7 @@ export default class Item {
   }
 
   public set lore(value: string[]) {
+    if (!value) return;
     if (value.length <= 0) return;
 
     this._lore = value;

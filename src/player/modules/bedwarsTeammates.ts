@@ -9,9 +9,9 @@ const playerModule = new PlayerModule(
 
 playerModule.customCode = () => {
   const player = playerModule.player;
-  if (!config.bedwarsTeammates) return;
 
   player.listener.on('team_create', (name) => {
+    if (!config.bedwarsTeammates) return;
     const existingTeam = player.teams.find((team) => team.name === name);
     if (existingTeam) return;
     player.teams.push({
@@ -21,10 +21,12 @@ playerModule.customCode = () => {
   });
 
   player.listener.on('team_delete', (name) => {
+    if (!config.bedwarsTeammates) return;
     player.teams = player.teams.filter((team) => team.name !== name);
   });
 
   player.listener.on('team_player_add', (name, players) => {
+    if (!config.bedwarsTeammates) return;
     player.teams.find((team) => team.name === name)?.players.push(...players);
 
     const playerTeam = player.teams.find((team) =>

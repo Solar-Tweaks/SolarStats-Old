@@ -7,7 +7,7 @@ export function createClient(apiKey: string): Client {
     cache: true,
     silent: true,
     headers: {
-      // Just leaving our mark on Hypixel's servers logs
+      // Just leaving our mark :D
       'User-Agent': 'Solar Stats | https://github.com/Solar-Tweaks/SolarStats',
     },
   });

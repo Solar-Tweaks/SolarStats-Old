@@ -2,11 +2,11 @@ import { InstantConnectProxy } from 'prismarine-proxy';
 import { createClient } from './utils/hypixel';
 import Listener from './Classes/Listener';
 import Player from './player/Player';
-import getConfig from './utils/config';
+import getConfig, { readConfig } from './utils/config';
 import { ping } from 'minecraft-protocol';
 import { NIL } from 'uuid';
 
-export const config = getConfig();
+export let config = getConfig();
 export const hypixelClient = createClient(config.apiKey);
 
 const proxy = new InstantConnectProxy({
@@ -40,7 +40,19 @@ const proxy = new InstantConnectProxy({
 console.log('Proxy started');
 
 export const listener = new Listener(proxy);
-export const player = new Player(listener, proxy);
+
+/* Player Modules */
+import bridgeHeightLimit from './player/modules/bridgeHeightLimit';
+import lunarCooldowns from './player/modules/lunarCooldowns';
+import bedwarsWaypoints from './player/modules/bedwarsWaypoints';
+import bedwarsTeammates from './player/modules/bedwarsTeammates';
+
+export const player = new Player(listener, proxy, [
+  bridgeHeightLimit,
+  lunarCooldowns,
+  bedwarsWaypoints,
+  bedwarsTeammates,
+]);
 
 proxy.on('incoming', (data, meta, toClient) => {
   if (player.overriddenPackets.incoming.includes(meta.name)) return;
@@ -69,3 +81,7 @@ proxy.on('end', (username) => {
   console.log(`${username} disconnected from the proxy`);
   player.disconnect();
 });
+
+export async function reloadConfig() {
+  config = await readConfig();
+}

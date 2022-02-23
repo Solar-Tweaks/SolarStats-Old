@@ -1,40 +1,40 @@
 import { Status } from 'hypixel-api-reborn';
 import { Client } from 'minecraft-protocol';
 import { LCPlayer } from '@solar-tweaks/minecraft-protocol-lunarclient';
-import { ChatMessage, PlayerInfo, Team } from '../Types';
+import { Team } from '../Types';
 import { fetchPlayerLocation } from '../utils/hypixel';
 import Listener from '../Classes/Listener';
 import CommandHandler from '../Classes/CommandHandler';
 import { InstantConnectProxy } from 'prismarine-proxy';
 import dodge from '../commands/dodge';
 import requeue from '../commands/requeue';
-import stat from '../commands/stat';
+import stats from '../commands/stats';
 import dumpPackets from '../commands/dumpPackets';
 import PlayerModule from './PlayerModule';
-import bridgeHeightLimit from './modules/bridgeHeightLimit';
-import lunarCooldowns from './modules/lunarCooldowns';
-import bedwarsWaypoints from './modules/bedwarsWaypoints';
-import bedwarsTeammates from './modules/bedwarsTeammates';
+import settings from '../commands/settings';
 
 export default class Player {
+  public readonly listener: Listener;
+  public readonly modules: PlayerModule[];
+  public readonly proxy: InstantConnectProxy;
+
   public overriddenPackets: { incoming: string[]; outgoing: string[] };
-  public online: boolean;
-  public uuid?: string;
   public client?: Client;
+  public lastGameMode?: string;
+  public lcPlayer?: LCPlayer;
+  public online?: boolean;
   public server?: Client;
   public status?: Status;
-  public lastGameMode?: string;
-  public playerList: PlayerInfo[];
-  public listener: Listener;
-  public dodging: boolean;
-  public teams: Team[];
-  public lcPlayer: LCPlayer;
-  public proxy: InstantConnectProxy;
-  public readonly modules: PlayerModule[];
+  public teams?: Team[];
+  public uuid?: string;
 
-  public constructor(listener: Listener, proxy: InstantConnectProxy) {
-    this.online = false;
+  public constructor(
+    listener: Listener,
+    proxy: InstantConnectProxy,
+    modules: PlayerModule[]
+  ) {
     this.listener = listener;
+    this.modules = modules;
     this.proxy = proxy;
 
     // Packets that have a custom handling
@@ -43,28 +43,24 @@ export default class Player {
       outgoing: ['chat', 'block_place'],
     };
 
-    new CommandHandler(proxy).registerCommand([
+    new CommandHandler(this.proxy).registerCommand([
       dodge.setPlayer(this),
       requeue.setPlayer(this),
-      stat.setPlayer(this),
+      stats.setPlayer(this),
       dumpPackets.setPlayer(this),
+      settings.setPlayer(this),
     ]);
 
-    this.modules = [
-      bridgeHeightLimit.setPlayer(this),
-      lunarCooldowns.setPlayer(this),
-      bedwarsWaypoints.setPlayer(this),
-      bedwarsTeammates.setPlayer(this),
-    ];
+    this.modules.forEach((module) => module.setPlayer(this));
   }
 
   public connect(client: Client, server: Client): void {
-    this.online = true;
-    this.uuid = client.uuid;
     this.client = client;
+    this.lcPlayer = new LCPlayer(client);
+    this.online = true;
     this.server = server;
     this.teams = [];
-    this.lcPlayer = new LCPlayer(client);
+    this.uuid = client.uuid;
 
     this.modules.forEach((module) => {
       // @ts-ignore
@@ -73,7 +69,6 @@ export default class Player {
     });
 
     this.listener.on('switch_server', async () => {
-      this.playerList = [];
       this.teams = [];
       this.lcPlayer.removeAllWaypoints();
       this.lcPlayer.removeAllTeammates();
@@ -87,14 +82,13 @@ export default class Player {
   }
 
   public disconnect(): void {
-    this.online = false;
-    this.uuid = null;
     this.client = null;
-    this.status = null;
     this.lastGameMode = null;
-    this.playerList = [];
-    this.dodging = false;
+    this.lcPlayer = null;
+    this.online = false;
+    this.status = null;
     this.teams = [];
+    this.uuid = null;
 
     this.listener.removeAllListeners();
   }
@@ -118,12 +112,6 @@ export default class Player {
     if (!this.status) return;
     if (!this.status.mode) return;
     if (this.status.mode === 'LOBBY') return;
-    if (this.dodging) {
-      this.lcPlayer.sendNotification("You're already dodging!", 2500, 'error');
-
-      return;
-    }
-    this.dodging = true;
     this.lcPlayer.sendNotification('Dodging game...', 2500);
     const command = `/play ${this.status.mode.toLocaleLowerCase()}`;
     this.executeCommand('/lobby blitz');
@@ -136,10 +124,8 @@ export default class Player {
     });
 
     setTimeout(() => {
-      if (switched) {
-        this.dodging = false;
-        return;
-      }
+      if (switched) return;
+
       this.executeCommand(command);
     }, 2500);
   }
@@ -149,17 +135,8 @@ export default class Player {
     else return false;
   }
 
-  public sendMessage(
-    text: string,
-    hoverText?: string,
-    showHoverHint = true
-  ): void {
-    const message: ChatMessage = { text };
-    if (hoverText) {
-      message.hoverEvent = { action: 'show_text', value: { text: hoverText } };
-      if (showHoverHint) message.text += ` §7(Hover for more information)`;
-    }
-    this.client.write('chat', { message: JSON.stringify(message) });
+  public sendMessage(text: string): void {
+    this.client.write('chat', { message: JSON.stringify({ text }) });
   }
 
   public executeCommand(command: string): void {
