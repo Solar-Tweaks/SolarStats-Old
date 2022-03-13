@@ -88,7 +88,7 @@ export default class Inventory extends (EventEmitter as new () => TypedEmitter<I
     });
   }
 
-  public setSlot(client: Client, item: Item, slot: number) {
+  public setSlot(client: Client, item: Item, slot: number): void {
     client.write('set_slot', {
       windowId: 50,
       slot,

@@ -27,11 +27,11 @@
   },
   "homepage": "https://github.com/Solar-Tweaks/SolarStats#readme",
   "dependencies": {
-    "@solar-tweaks/minecraft-protocol-lunarclient": "^1.0.0",
+    "@solar-tweaks/minecraft-protocol-lunarclient": "^1.2.0",
     "axios": "^0.26.0",
     "hypixel-api-reborn": "^10.0.0",
     "jsonschema": "^1.4.0",
-    "minecraft-protocol": "^1.30.0",
+    "minecraft-protocol": "^1.32.0",
     "prismarine-proxy": "^1.1.1",
     "uuid": "^8.3.2"
   },

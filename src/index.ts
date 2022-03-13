@@ -29,12 +29,16 @@ const proxy = new InstantConnectProxy({
 
       callback(null, response);
     },
+    // @ts-ignore
+    validateChannelProtocol: false,
   },
 
   clientOptions: {
     version: '1.8.9',
     host: config.server.host,
     port: config.server.port,
+    // @ts-ignore
+    validateChannelProtocol: false,
   },
 });
 console.log('Proxy started');
