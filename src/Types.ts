@@ -17,6 +17,7 @@ export interface Config {
 export interface PlayerData {
   player: string;
   name: string;
+  uuid: string;
   formattedNickname: string;
   stats: typeof HypixelPlayer.prototype.stats;
   online: boolean;

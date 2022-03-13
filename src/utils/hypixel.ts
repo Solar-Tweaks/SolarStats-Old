@@ -7,7 +7,7 @@ export function createClient(apiKey: string): Client {
     cache: true,
     silent: true,
     headers: {
-      // Just leaving our mark :D
+      // Just leaving our footprint :D
       'User-Agent': 'Solar Stats | https://github.com/Solar-Tweaks/SolarStats',
     },
   });
@@ -21,10 +21,11 @@ export function createClient(apiKey: string): Client {
 
 export async function fetchPlayerData(
   playerOrUuid: string
-): Promise<PlayerData> {
+): Promise<PlayerData | null> {
   const playerData: PlayerData = {
     player: playerOrUuid,
     name: null,
+    uuid: null,
     formattedNickname: null,
     stats: null,
     online: false,
@@ -37,6 +38,7 @@ export async function fetchPlayerData(
     Promise.all([player, status])
       .then(([player, status]) => {
         playerData.name = player.nickname;
+        playerData.uuid = player.uuid;
         playerData.stats = player.stats;
         playerData.formattedNickname = transformNickname(player);
 
@@ -86,12 +88,12 @@ export function transformNickname(player: Player): string {
       nickname = `§b[MVP] ${player.nickname}`;
       break;
     case 'MVP+':
-      nickname = `§b[MVP${transormColor(player.plusColor)}+§b] ${
+      nickname = `§b[MVP${transformColor(player.plusColor)}+§b] ${
         player.nickname
       }`;
       break;
     case 'MVP++':
-      nickname = `§6[MVP${transormColor(player.plusColor)}++§6] ${
+      nickname = `§6[MVP${transformColor(player.plusColor)}++§6] ${
         player.nickname
       }`;
       break;
@@ -111,7 +113,7 @@ export function transformNickname(player: Player): string {
 }
 
 // Thanks hypixel-api for not providing this one
-export function transormColor(color: Color): string {
+export function transformColor(color: Color): string {
   let transformed = '§';
 
   let colorCode = '';

@@ -50,12 +50,14 @@ import bridgeHeightLimit from './player/modules/bridgeHeightLimit';
 import lunarCooldowns from './player/modules/lunarCooldowns';
 import bedwarsWaypoints from './player/modules/bedwarsWaypoints';
 import bedwarsTeammates from './player/modules/bedwarsTeammates';
+import stats from './player/modules/stats';
 
 export const player = new Player(listener, proxy, [
   bridgeHeightLimit,
   lunarCooldowns,
   bedwarsWaypoints,
   bedwarsTeammates,
+  stats,
 ]);
 
 proxy.on('incoming', (data, meta, toClient) => {

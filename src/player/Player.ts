@@ -10,19 +10,21 @@ import dodge from '../commands/dodge';
 import requeue from '../commands/requeue';
 import stats from '../commands/stats';
 import dumpPackets from '../commands/dumpPackets';
-import PlayerModule from './PlayerModule';
 import settings from '../commands/settings';
+import debug from '../commands/debug';
+import PlayerModule from './PlayerModule';
 
 export default class Player {
+  public readonly crashedModules: PlayerModule[];
   public readonly listener: Listener;
   public readonly modules: PlayerModule[];
   public readonly proxy: InstantConnectProxy;
 
-  public overriddenPackets: { incoming: string[]; outgoing: string[] };
   public client?: Client;
   public lastGameMode?: string;
   public lcPlayer?: LCPlayer;
   public online?: boolean;
+  public overriddenPackets: { incoming: string[]; outgoing: string[] };
   public server?: Client;
   public status?: Status;
   public teams?: Team[];
@@ -33,6 +35,7 @@ export default class Player {
     proxy: InstantConnectProxy,
     modules: PlayerModule[]
   ) {
+    this.crashedModules = [];
     this.listener = listener;
     this.modules = modules;
     this.proxy = proxy;
@@ -49,6 +52,7 @@ export default class Player {
       stats.setPlayer(this),
       dumpPackets.setPlayer(this),
       settings.setPlayer(this),
+      debug.setPlayer(this),
     ]);
 
     this.modules.forEach((module) => module.setPlayer(this));
@@ -63,9 +67,13 @@ export default class Player {
     this.uuid = client.uuid;
 
     this.modules.forEach((module) => {
-      // @ts-ignore
-      this.listener.on(module.event, module.handler);
-      module.customCode();
+      try {
+        // @ts-ignore
+        this.listener.on(module.event, module.handler);
+        module.customCode();
+      } catch (error) {
+        this.onModuleCrash(module, error);
+      }
     });
 
     this.listener.on('switch_server', async () => {
@@ -100,7 +108,11 @@ export default class Player {
         if (this.status.mode !== 'LOBBY') this.lastGameMode = this.status.mode;
 
         this.modules.forEach((module) => {
-          module.onLocationUpdate();
+          try {
+            module.onLocationUpdate();
+          } catch (error) {
+            this.onModuleCrash(module, error);
+          }
         });
       })
       .catch(() => {
@@ -141,5 +153,15 @@ export default class Player {
 
   public executeCommand(command: string): void {
     this.server.write('chat', { message: command });
+  }
+
+  private onModuleCrash(module: PlayerModule, error): void {
+    this.sendMessage(
+      `§cError while executing module ${module.name}!\n§cDisabling module...`
+    );
+    this.listener.removeAllListeners(module.event);
+    this.modules.splice(this.modules.indexOf(module), 1);
+    console.error(error);
+    this.crashedModules.push(module);
   }
 }
