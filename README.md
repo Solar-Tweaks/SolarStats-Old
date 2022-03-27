@@ -67,7 +67,8 @@ Once the repo is downloaded move to the directory and install the dependencies
 
 ```bash
 $ cd SolarStats
-$ npm install
+# st-install runs `npm i` as well as some additional handling for @solar-tweaks:minecraft-protocol-lunarclient
+$ npm run st-install
 ```
 
 You can build the project (but you will need to use `npm run start` to start it)
