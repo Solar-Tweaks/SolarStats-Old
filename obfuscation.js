@@ -1,8 +1,13 @@
-const { readFileSync, writeFileSync } = require('fs');
+const { readFileSync, writeFileSync, existsSync } = require('fs');
 const { join } = require('path');
 const Obfuscator = require('javascript-obfuscator');
 
 const moduleLocation = join(__dirname, 'build/player/modules/stats.js');
+
+if (!existsSync(moduleLocation)) {
+  console.log("stats module was not present, skipping obfuscation");
+  process.exit(0);
+}
 
 const obfuscated = Obfuscator.obfuscate(readFileSync(moduleLocation, 'utf8'), {
   target: 'node',
