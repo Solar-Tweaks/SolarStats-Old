@@ -52,7 +52,7 @@ import bedwarsWaypoints from './player/modules/bedwarsWaypoints';
 import bedwarsTeammates from './player/modules/bedwarsTeammates';
 import PlayerModule from './player/PlayerModule';
 
-var stats: PlayerModule | undefined;
+let stats: PlayerModule | undefined = undefined;
 
 try {
   stats = require('./player/modules/stats');
@@ -60,10 +60,9 @@ try {
   if (e.code !== 'MODULE_NOT_FOUND') throw e;
   
   console.info(`Could not load stats module, this is expected.`);
-  stats = undefined;
 }
 
-var modules = [
+const modules = [
   bridgeHeightLimit,
   lunarCooldowns,
   bedwarsWaypoints,
