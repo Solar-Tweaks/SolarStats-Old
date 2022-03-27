@@ -12,7 +12,7 @@ function run(executable, params) {
 const cwd = process.cwd();
 
 console.log("\ninfo: verifying minecraft-protocol-lunarclient");
-console.log("debug: working directory @ " + cwd + "\n");
+console.log(`debug: working directory @ ${cwd}\n`);
 
 if (fs.existsSync(path.join(cwd, "node_modules", "@solar-tweaks", "minecraft-protocol-lunarclient"))) {
     console.log("info: minecraft-protocol-lunarclient successfully installed");
