@@ -11,7 +11,7 @@
     "obfuscateStatsModule": "npm run build && node obfuscation.js",
     "package": "npm run obfuscateStatsModule && pkg . --compress GZip",
     "start": "node .",
-    "st-install": "node ./scripts/install.js"
+    "install": "node ./scripts/install.js"
   },
   "repository": {
     "type": "git",

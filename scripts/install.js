@@ -6,8 +6,8 @@ function run(executable, params) {
     spawnSync(executable, params, { shell: true, stdio: "inherit" });
 }
 
-console.log("\ninfo: installing dependencies...\n");
-run("npm", ["i"]);
+// console.log("\ninfo: installing dependencies...\n");
+// run("npm", ["i"]);
 
 const cwd = process.cwd();
 
