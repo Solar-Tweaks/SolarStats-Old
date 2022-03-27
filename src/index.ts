@@ -50,15 +50,29 @@ import bridgeHeightLimit from './player/modules/bridgeHeightLimit';
 import lunarCooldowns from './player/modules/lunarCooldowns';
 import bedwarsWaypoints from './player/modules/bedwarsWaypoints';
 import bedwarsTeammates from './player/modules/bedwarsTeammates';
-import stats from './player/modules/stats';
+import PlayerModule from './player/PlayerModule';
 
-export const player = new Player(listener, proxy, [
+var stats: PlayerModule | undefined;
+
+try {
+  stats = require('./player/modules/stats');
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e;
+  
+  console.info(`Could not load stats module, this is expected.`);
+  stats = undefined;
+}
+
+var modules = [
   bridgeHeightLimit,
   lunarCooldowns,
   bedwarsWaypoints,
   bedwarsTeammates,
-  stats,
-]);
+]
+
+if (stats !== undefined) modules.push(stats);
+
+export const player = new Player(listener, proxy, modules);
 
 proxy.on('incoming', (data, meta, toClient) => {
   if (player.overriddenPackets.incoming.includes(meta.name)) return;
