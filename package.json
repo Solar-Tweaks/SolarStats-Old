@@ -10,7 +10,8 @@
     "build": "tsc",
     "obfuscateStatsModule": "npm run build && node obfuscation.js",
     "package": "npm run obfuscateStatsModule && pkg . --compress GZip",
-    "start": "node ."
+    "start": "node .",
+    "install": "node ./scripts/install.js"
   },
   "repository": {
     "type": "git",
@@ -28,7 +29,7 @@
   },
   "homepage": "https://github.com/Solar-Tweaks/SolarStats#readme",
   "dependencies": {
-    "@solar-tweaks/minecraft-protocol-lunarclient": "^1.2.1",
+    "@solar-tweaks/minecraft-protocol-lunarclient": "github:Solar-Tweaks/minecraft-protocol-lunarclient",
     "axios": "^0.26.0",
     "hypixel-api-reborn": "^10.0.0",
     "jsonschema": "^1.4.0",
