@@ -5,13 +5,10 @@
   "main": "build/index.js",
   "bin": "build/index.js",
   "scripts": {
+    "install": "node ./scripts/install.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "generateConfigSchema": "typescript-json-schema src/Types.ts Config",
-    "build": "tsc",
-    "obfuscateStatsModule": "npm run build && node obfuscation.js",
-    "package": "npm run obfuscateStatsModule && pkg . --compress GZip",
-    "start": "node .",
-    "install": "node ./scripts/install.js"
+    "build": "node ./scripts/build.js"
   },
   "repository": {
     "type": "git",
