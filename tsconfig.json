@@ -4,6 +4,6 @@
     "module": "CommonJS",
     "outDir": "./build"
   },
-  "include": ["src"],
+  "include": ["src", "stats.ts"],
   "exclude": ["node_modules"]
 }
