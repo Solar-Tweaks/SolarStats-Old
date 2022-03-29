@@ -45,7 +45,10 @@
   },
   "pkg": {
     "scripts": "build/**/*.js",
-    "assets": "node_modules/minecraft-packets/minecraft-packets/data/pc/1.8",
+    "assets": [
+      "node_modules/minecraft-packets/minecraft-packets/data/pc/1.8",
+      "package.json"
+    ],
     "targets": [
       "node14-win-x64"
     ],
