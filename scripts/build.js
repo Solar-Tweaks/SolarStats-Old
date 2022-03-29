@@ -7,11 +7,15 @@ function run(executable, params) {
   });
 }
 
-console.log('info: compiling typescript');
+console.log('info: compiling typescript 💽');
 run('npx', ['tsc']);
 
-console.log('info: obfuscating stats module');
+console.log('info: obfuscating stats module 🔒');
 run('node', ['./scripts/obfuscation.js']);
 
-console.log('info: packaging app');
-run('pkg', ['.', '--compress=GZip']); // TODO: Make the compression works (maybe a library issue)
+console.log('info: packaging app 📦\n');
+run('pkg', ['.', '--compress=GZip']);
+
+console.log(
+  '\ninfo: build successful! 🎉\n -> Run the app using `npm start`\n -> For production, use the executable inside the `dist` folder\n'
+);
