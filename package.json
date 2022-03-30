@@ -5,12 +5,10 @@
   "main": "build/index.js",
   "bin": "build/index.js",
   "scripts": {
+    "install": "node ./scripts/install.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "generateConfigSchema": "typescript-json-schema src/Types.ts Config",
-    "build": "tsc",
-    "obfuscateStatsModule": "npm run build && node obfuscation.js",
-    "package": "npm run obfuscateStatsModule && pkg . --compress GZip",
-    "start": "node ."
+    "build": "node ./scripts/build.js"
   },
   "repository": {
     "type": "git",
@@ -28,7 +26,7 @@
   },
   "homepage": "https://github.com/Solar-Tweaks/SolarStats#readme",
   "dependencies": {
-    "@solar-tweaks/minecraft-protocol-lunarclient": "^1.2.1",
+    "@solar-tweaks/minecraft-protocol-lunarclient": "github:Solar-Tweaks/minecraft-protocol-lunarclient",
     "axios": "^0.26.0",
     "hypixel-api-reborn": "^10.0.0",
     "jsonschema": "^1.4.0",
@@ -40,14 +38,17 @@
     "@types/node": "^17.0.5",
     "@types/uuid": "^8.3.4",
     "javascript-obfuscator": "^4.0.0",
-    "pkg": "^4.4.9",
+    "pkg": "^5.5.2",
     "typed-emitter": "^1.4.0",
     "typescript": "^4.5.4",
     "typescript-json-schema": "^0.53.0"
   },
   "pkg": {
     "scripts": "build/**/*.js",
-    "assets": "node_modules/minecraft-packets/minecraft-packets/data/pc/1.8",
+    "assets": [
+      "node_modules/minecraft-packets/minecraft-packets/data/pc/1.8",
+      "package.json"
+    ],
     "targets": [
       "node14-win-x64"
     ],

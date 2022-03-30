@@ -29,7 +29,6 @@ const proxy = new InstantConnectProxy({
 
       callback(null, response);
     },
-    // @ts-ignore
     validateChannelProtocol: false,
   },
 
@@ -37,7 +36,6 @@ const proxy = new InstantConnectProxy({
     version: '1.8.9',
     host: config.server.host,
     port: config.server.port,
-    // @ts-ignore
     validateChannelProtocol: false,
   },
 });
@@ -104,3 +102,7 @@ proxy.on('end', (username) => {
 export async function reloadConfig() {
   config = await readConfig();
 }
+export const isPacked: boolean = Object.prototype.hasOwnProperty.call(
+  process,
+  'pkg'
+);

@@ -44,7 +44,7 @@ Make sure to [have built](#building-from-source-%EF%B8%8F) the server before sta
 ### With NodeJS
 
 ```bash
-$ npm run start
+$ npm start
 ```
 
 ### With the executable
@@ -70,16 +70,10 @@ $ cd SolarStats
 $ npm install
 ```
 
-You can build the project (but you will need to use `npm run start` to start it)
+You can now build the project, you will be able to use the exe file located in the `dist` folder. Or use the `npm start` command to directly run the compiled TypeScript
 
 ```bash
 $ npm run build
-```
-
-Or you can package to an executable with
-
-```bash
-$ npm run package
 ```
 
 # Authenticating 🔒
@@ -93,3 +87,5 @@ To sign in, use a web browser to open the page https://www.microsoft.com/link an
 
 Open a browser and login with your Microsoft account.
 If you have not migrated your account yet you can try to edit the code manually. _(Or migrate your account)_
+
+**⚠️ Mojang accounts wont be supported!**
