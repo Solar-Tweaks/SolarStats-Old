@@ -50,13 +50,11 @@ import bedwarsWaypoints from './player/modules/bedwarsWaypoints';
 import bedwarsTeammates from './player/modules/bedwarsTeammates';
 import PlayerModule from './player/PlayerModule';
 
-let stats: PlayerModule | undefined = undefined;
-
+let stats: PlayerModule | undefined;
 try {
-  stats = require('./player/modules/stats');
-} catch (e) {
-  if (e.code !== 'MODULE_NOT_FOUND') throw e;
-  
+  stats = require('./player/modules/stats').default;
+} catch (error) {
+  if (error.code !== 'MODULE_NOT_FOUND') throw error;
   console.info(`Could not load stats module, this is expected.`);
 }
 
@@ -65,9 +63,8 @@ const modules = [
   lunarCooldowns,
   bedwarsWaypoints,
   bedwarsTeammates,
-]
-
-if (stats !== undefined) modules.push(stats);
+];
+if (stats instanceof PlayerModule) modules.push(stats);
 
 export const player = new Player(listener, proxy, modules);
 
