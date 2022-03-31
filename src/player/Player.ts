@@ -1,7 +1,7 @@
 import { Status } from 'hypixel-api-reborn';
 import { Client } from 'minecraft-protocol';
 import { LCPlayer } from '@solar-tweaks/minecraft-protocol-lunarclient';
-import { Team } from '../Types';
+import { Command, Team } from '../Types';
 import { fetchPlayerLocation } from '../utils/hypixel';
 import Listener from '../Classes/Listener';
 import CommandHandler from '../Classes/CommandHandler';
@@ -21,6 +21,7 @@ export default class Player {
   public readonly listener: Listener;
   public readonly modules: PlayerModule[];
   public readonly proxy: InstantConnectProxy;
+  public readonly commandHandler: CommandHandler;
 
   public client?: Client;
   public lastGameMode?: string;
@@ -48,7 +49,7 @@ export default class Player {
       outgoing: ['chat', 'block_place'],
     };
 
-    new CommandHandler(this.proxy).registerCommand([
+    this.commandHandler = new CommandHandler(this.proxy).registerCommand([
       dodge.setPlayer(this),
       requeue.setPlayer(this),
       stats.setPlayer(this),

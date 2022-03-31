@@ -71,6 +71,12 @@ export const configSchema = {
     bedwarsWaypoints: {
       type: 'boolean',
     },
+    customEmotes: {
+      additionalProperties: {
+        type: 'string',
+      },
+      type: 'object',
+    },
     heightLimitDelayFix: {
       type: 'boolean',
     },
@@ -105,5 +111,6 @@ export const defaultConfig: Config = {
     host: 'hypixel.net',
     port: 25565,
   },
+  customEmotes: {},
   statistics: true,
 };

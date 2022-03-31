@@ -55,11 +55,12 @@ Logger.info('Proxy started');
 export const listener = new Listener(proxy);
 
 /* Player Modules */
+import PlayerModule from './player/PlayerModule';
 import bridgeHeightLimit from './player/modules/bridgeHeightLimit';
 import lunarCooldowns from './player/modules/lunarCooldowns';
 import bedwarsWaypoints from './player/modules/bedwarsWaypoints';
 import bedwarsTeammates from './player/modules/bedwarsTeammates';
-import PlayerModule from './player/PlayerModule';
+import mvpPlusPlusEmotes from './player/modules/mvpPlusPlusEmotes';
 
 let stats: PlayerModule | undefined;
 try {
@@ -74,6 +75,7 @@ const modules = [
   lunarCooldowns,
   bedwarsWaypoints,
   bedwarsTeammates,
+  mvpPlusPlusEmotes,
 ];
 if (stats instanceof PlayerModule) modules.push(stats);
 

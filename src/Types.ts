@@ -12,6 +12,7 @@ export interface Config {
     host: string;
     port: number;
   };
+  customEmotes: { [key: string]: string };
   statistics: boolean;
 }
 
