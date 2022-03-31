@@ -66,7 +66,7 @@ playerModule.customCode = () => {
       }
       uuids.forEach((uuid) => {
         if (uuid === undefined) return;
-        
+
         player.lcPlayer.addTeammate(
           uuid.substr(0, 8) +
             '-' +

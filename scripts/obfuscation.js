@@ -11,7 +11,7 @@ const moduleLocation = join(
 );
 
 if (!existsSync(moduleLocation)) {
-  console.log("info: stats module was not present, skipping obfuscation ⏭️");
+  console.log('info: stats module was not present, skipping obfuscation ⏭️');
   process.exit(0);
 }
 
