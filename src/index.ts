@@ -56,7 +56,7 @@ try {
   stats = require('./player/modules/stats');
 } catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e;
-  
+
   console.info(`Could not load stats module, this is expected.`);
 }
 
@@ -65,7 +65,7 @@ const modules = [
   lunarCooldowns,
   bedwarsWaypoints,
   bedwarsTeammates,
-]
+];
 
 if (stats !== undefined) modules.push(stats);
 
