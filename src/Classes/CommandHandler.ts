@@ -10,7 +10,7 @@ export default class CommandHandler {
     this.commands = [];
     this.commandsList = [];
 
-    proxy.on('outgoing', (data, meta, toClient, toServer) => {
+    proxy.on('outgoing', (data, meta) => {
       if (meta.name === 'chat') {
         const message: string = data.message.toLowerCase().split(' ')[0];
         if (!this.commandsList.includes(message)) return;

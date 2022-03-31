@@ -1,7 +1,7 @@
 import { Status } from 'hypixel-api-reborn';
 import { Client } from 'minecraft-protocol';
 import { LCPlayer } from '@solar-tweaks/minecraft-protocol-lunarclient';
-import { Command, Team } from '../Types';
+import { Team } from '../Types';
 import { fetchPlayerLocation } from '../utils/hypixel';
 import Listener from '../Classes/Listener';
 import CommandHandler from '../Classes/CommandHandler';
