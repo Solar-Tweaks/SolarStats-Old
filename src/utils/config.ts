@@ -2,6 +2,7 @@ import { validate } from 'jsonschema';
 import { Config } from '../Types';
 import { existsSync, writeFileSync, readFileSync } from 'fs';
 import { writeFile, readFile } from 'fs/promises';
+import Logger from '../Classes/Logger';
 
 const filePath = './config.json';
 
@@ -9,7 +10,7 @@ export default function getConfig(): Config {
   const exists = existsSync(filePath);
 
   if (!exists) {
-    console.log(
+    Logger.info(
       'Config does not exists! Creating a new one with default values...'
     );
     writeFileSync(filePath, JSON.stringify(defaultConfig, null, 2));
@@ -35,7 +36,7 @@ export async function readConfig(): Promise<Config> {
       throw new Error("Can't validate config file");
     }
   } catch (error) {
-    console.error('Error while processing config file');
+    Logger.error('Error while processing config file');
     throw error;
   }
 }
@@ -51,7 +52,7 @@ export function readConfigSync(): Config {
       throw new Error("Can't validate config file");
     }
   } catch (error) {
-    console.error('Error while processing config file');
+    Logger.error('Error while processing config file');
     throw error;
   }
 }

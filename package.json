@@ -8,7 +8,8 @@
     "install": "node ./scripts/install.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "generateConfigSchema": "typescript-json-schema src/Types.ts Config",
-    "build": "node ./scripts/build.js"
+    "build": "node ./scripts/build.js",
+    "start": "node ."
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
   "dependencies": {
     "@solar-tweaks/minecraft-protocol-lunarclient": "github:Solar-Tweaks/minecraft-protocol-lunarclient",
     "axios": "^0.26.0",
+    "chalk": "^4.1.2",
     "hypixel-api-reborn": "^10.0.0",
     "jsonschema": "^1.4.0",
     "minecraft-protocol": "^1.32.0",

@@ -3,6 +3,7 @@ import TypedEmitter from 'typed-emitter';
 import { ListenerEvents } from '../Types';
 import { InstantConnectProxy } from 'prismarine-proxy';
 import { player } from '..';
+import Logger from './Logger';
 
 export default class Listener extends (EventEmitter as new () => TypedEmitter<ListenerEvents>) {
   public constructor(proxy: InstantConnectProxy) {
@@ -40,7 +41,7 @@ export default class Listener extends (EventEmitter as new () => TypedEmitter<Li
             }
           }
         } catch (error) {
-          console.error("Couldn't parse chat packet", error);
+          Logger.error("Couldn't parse chat packet", error);
         }
       }
 

@@ -1,5 +1,6 @@
 import { InstantConnectProxy } from 'prismarine-proxy';
 import Command from './Command';
+import Logger from './Logger';
 
 export default class CommandHandler {
   public commands: Command[];
@@ -31,7 +32,7 @@ export default class CommandHandler {
         }
 
         if (command) command.onTriggered(message, args);
-        else console.log(`Command ${message} not found`);
+        else Logger.warn(`Command ${message} not found`);
       }
     });
   }

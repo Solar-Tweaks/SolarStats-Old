@@ -7,9 +7,18 @@ import { ping } from 'minecraft-protocol';
 import { NIL } from 'uuid';
 import axios from 'axios';
 import * as https from 'https';
+import Logger from './Classes/Logger';
+import * as chalk from 'chalk';
 
 export let config = getConfig();
 export const hypixelClient = createClient(config.apiKey);
+
+console.log(`\n   _____       _               _____ _        _       
+  / ____|     | |             / ____| |      | |      
+ | (___   ___ | | __ _ _ __  | (___ | |_ __ _| |_ ___ 
+  \\___ \\ / _ \\| |/ _\` | '__|  \\___ \\| __/ _\` | __/ __|
+  ____) | (_) | | (_| | |     ____) | || (_| | |_\\__ \\
+ |_____/ \\___/|_|\\__,_|_|    |_____/ \\__\\__,_|\\__|___/\n\n`);
 
 const proxy = new InstantConnectProxy({
   loginHandler: (client) => ({
@@ -41,7 +50,7 @@ const proxy = new InstantConnectProxy({
     validateChannelProtocol: false,
   },
 });
-console.log('Proxy started');
+Logger.info('Proxy started');
 
 export const listener = new Listener(proxy);
 
@@ -57,7 +66,7 @@ try {
   stats = require('./player/modules/stats').default;
 } catch (error) {
   if (error.code !== 'MODULE_NOT_FOUND') throw error;
-  console.info(`Could not load stats module, this is expected.`);
+  Logger.warn('Could not load stats module, this is expected.');
 }
 
 const modules = [
@@ -88,13 +97,13 @@ proxy.on('outgoing', (data, meta, toClient, toServer) => {
 // AND changes server (when connected to a proxy like Bungeecord) for some reason
 proxy.on('start', (client, server) => {
   if (!player.online) {
-    console.log(`${client.username} connected to the proxy`);
+    Logger.info(`${chalk.italic.bold(client.username)} connected to the proxy`);
     player.connect(client, server);
   }
 });
 
 proxy.on('end', (username) => {
-  console.log(`${username} disconnected from the proxy`);
+  Logger.info(`${chalk.italic.bold(username)} disconnected from the proxy`);
   player.disconnect();
 });
 
@@ -119,4 +128,6 @@ if (config.statistics)
         httpsAgent: new https.Agent({ rejectUnauthorized: false }),
       }
     )
-    .catch(console.error);
+    .catch((error) =>
+      Logger.error('An error occurred while sending statistics', error)
+    );

@@ -1,5 +1,6 @@
 import { CommandSyntax, CommandSyntaxType } from '../Types';
 import Player from '../player/Player';
+import Logger from './Logger';
 
 export default class Command {
   public name: string;
@@ -23,7 +24,7 @@ export default class Command {
   }
 
   public onTriggered(command: string, args: string[]): void {
-    console.warn(
+    Logger.warn(
       `Command ${command} not handled!`,
       `Raw command: ${command}`,
       'Arguments:',

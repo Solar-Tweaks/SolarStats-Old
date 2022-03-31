@@ -12,7 +12,9 @@ import stats from '../commands/stats';
 import dumpPackets from '../commands/dumpPackets';
 import settings from '../commands/settings';
 import debug from '../commands/debug';
+import solarsucks from '../commands/solarsucks';
 import PlayerModule from './PlayerModule';
+import Logger from '../Classes/Logger';
 
 export default class Player {
   public readonly crashedModules: PlayerModule[];
@@ -53,6 +55,7 @@ export default class Player {
       dumpPackets.setPlayer(this),
       settings.setPlayer(this),
       debug.setPlayer(this),
+      solarsucks.setPlayer(this),
     ]);
 
     this.modules.forEach((module) => module.setPlayer(this));
@@ -161,7 +164,7 @@ export default class Player {
     );
     this.listener.removeAllListeners(module.event);
     this.modules.splice(this.modules.indexOf(module), 1);
-    console.error(error);
+    Logger.error(`Error while executing module ${module.name}!`, error);
     this.crashedModules.push(module);
   }
 }
