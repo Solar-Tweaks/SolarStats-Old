@@ -65,10 +65,16 @@ export const configSchema = {
     apiKey: {
       type: 'string',
     },
+    autoDownloadUpdates: {
+      type: 'boolean',
+    },
     bedwarsTeammates: {
       type: 'boolean',
     },
     bedwarsWaypoints: {
+      type: 'boolean',
+    },
+    checkForUpdates: {
       type: 'boolean',
     },
     customEmotes: {
@@ -112,5 +118,7 @@ export const defaultConfig: Config = {
     port: 25565,
   },
   customEmotes: {},
+  checkForUpdates: true,
+  autoDownloadUpdates: true,
   statistics: true,
 };

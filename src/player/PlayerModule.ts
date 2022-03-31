@@ -9,6 +9,7 @@ export default class PlayerModule {
   public handler: Function;
   public customCode: () => void;
   public onLocationUpdate: () => void;
+  public onDisconnect: () => void;
 
   public constructor(string: string, description: string) {
     this.name = string;
@@ -17,6 +18,7 @@ export default class PlayerModule {
     this.handler = () => {};
     this.customCode = () => {};
     this.onLocationUpdate = () => {};
+    this.onDisconnect = () => {};
   }
 
   public setPlayer(player: Player): PlayerModule {

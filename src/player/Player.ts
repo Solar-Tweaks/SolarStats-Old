@@ -103,6 +103,8 @@ export default class Player {
     this.uuid = null;
 
     this.listener.removeAllListeners();
+
+    this.modules.forEach((module) => module.onDisconnect());
   }
 
   public async refreshPlayerLocation(): Promise<void> {

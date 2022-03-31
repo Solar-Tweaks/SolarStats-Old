@@ -9,9 +9,7 @@ import axios from 'axios';
 import * as https from 'https';
 import Logger from './Classes/Logger';
 import * as chalk from 'chalk';
-
-export let config = getConfig();
-export const hypixelClient = createClient(config.apiKey);
+import update from './utils/updater';
 
 console.log(`\n   _____       _               _____ _        _       
   / ____|     | |             / ____| |      | |      
@@ -19,6 +17,11 @@ console.log(`\n   _____       _               _____ _        _
   \\___ \\ / _ \\| |/ _\` | '__|  \\___ \\| __/ _\` | __/ __|
   ____) | (_) | | (_| | |     ____) | || (_| | |_\\__ \\
  |_____/ \\___/|_|\\__,_|_|    |_____/ \\__\\__,_|\\__|___/\n\n`);
+
+export let config = getConfig();
+export const hypixelClient = createClient(config.apiKey);
+
+if (process.platform === 'win32' && config.checkForUpdates) update();
 
 const proxy = new InstantConnectProxy({
   loginHandler: (client) => ({

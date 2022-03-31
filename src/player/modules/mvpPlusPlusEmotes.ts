@@ -1,3 +1,4 @@
+import { Client, PacketMeta, ServerClient } from 'minecraft-protocol';
 import { config } from '../..';
 import PlayerModule from '../PlayerModule';
 
@@ -46,25 +47,34 @@ const emotes = {
   ...config.customEmotes,
 };
 
-playerModule.customCode = () => {
-  const player = playerModule.player;
+const onOutgoingPacket = (
+  data,
+  meta: PacketMeta,
+  toClient: ServerClient,
+  toServer: Client
+) => {
+  if (meta.name !== 'chat') return;
 
-  player.proxy.on('outgoing', (data, meta, toClient, toServer) => {
-    if (meta.name !== 'chat') return;
-
-    // Ignoring commands because they are handled by the command handler
-    if (
-      playerModule.player.commandHandler.commandsList.includes(
-        data.message.toLowerCase().split(' ')[0]
-      )
+  // Ignoring commands because they are handled by the command handler
+  if (
+    playerModule.player.commandHandler.commandsList.includes(
+      data.message.toLowerCase().split(' ')[0]
     )
-      return;
+  )
+    return;
 
-    for (const syntax in emotes)
-      if (Object.prototype.hasOwnProperty.call(emotes, syntax))
-        data.message = data.message.replace(syntax, '§' + emotes[syntax]);
-    toServer.write(meta.name, data);
-  });
+  for (const syntax in emotes)
+    if (Object.prototype.hasOwnProperty.call(emotes, syntax))
+      data.message = data.message.replace(syntax, emotes[syntax]);
+  toServer.write(meta.name, data);
+};
+
+playerModule.customCode = () => {
+  playerModule.player.proxy.on('outgoing', onOutgoingPacket);
+};
+
+playerModule.onDisconnect = () => {
+  playerModule.player.proxy.removeListener('outgoing', onOutgoingPacket);
 };
 
 export default playerModule;

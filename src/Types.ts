@@ -13,6 +13,8 @@ export interface Config {
     port: number;
   };
   customEmotes: { [key: string]: string };
+  checkForUpdates: boolean;
+  autoDownloadUpdates: boolean;
   statistics: boolean;
 }
 

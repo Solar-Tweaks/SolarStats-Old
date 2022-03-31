@@ -33,6 +33,11 @@ At the root of the project (or in the same directory as the executable) create a
     "host": "hypixel.net", // IP of the server
     "port": 25565 // Port of the server
   },
+  "customEmotes": {
+    ":solar:": "☀" // "syntax": "emote (syntax is the message you type in chat, and the emote is the one you see)"
+  },
+  "checkForUpdates": true, // Check for updates on startup
+  "autoDownloadUpdates": true, // Automatically download updates if available
   "statistics": true // Allow Solar Tweaks to track statistics. Statistics tracked: when you launch the proxy (They are of course anonymous)
 }
 ```
