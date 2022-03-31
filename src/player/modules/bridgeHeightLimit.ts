@@ -15,7 +15,11 @@ playerModule.handler = (
   toClient: ServerClient,
   toServer: Client
 ) => {
-  if (playerModule.player.status && config.heightLimitDelayFix) {
+  if (
+    playerModule.player.status &&
+    playerModule.player.status?.mode &&
+    config.heightLimitDelayFix
+  ) {
     if (
       playerModule.player.status.mode.includes('DUELS_BRIDGE_') &&
       ((packet.location.y === 99 && packet.direction === 1) ||
