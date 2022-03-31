@@ -32,7 +32,8 @@ At the root of the project (or in the same directory as the executable) create a
     // Server to connect to
     "host": "hypixel.net", // IP of the server
     "port": 25565 // Port of the server
-  }
+  },
+  "statistics": true // Allow Solar Tweaks to track statistics. Statistics tracked: when you launch the proxy (They are of course anonymous)
 }
 ```
 <!-- prettier-ignore-end -->
