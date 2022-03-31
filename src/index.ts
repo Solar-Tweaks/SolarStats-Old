@@ -5,6 +5,8 @@ import Player from './player/Player';
 import getConfig, { readConfig } from './utils/config';
 import { ping } from 'minecraft-protocol';
 import { NIL } from 'uuid';
+import axios from 'axios';
+import * as https from 'https';
 
 export let config = getConfig();
 export const hypixelClient = createClient(config.apiKey);
@@ -103,3 +105,18 @@ export const isPacked: boolean = Object.prototype.hasOwnProperty.call(
   process,
   'pkg'
 );
+
+// Statistics
+if (config.statistics)
+  axios
+    .post(
+      'https://server.solartweaks.com/api/launch',
+      {
+        item: 'solarstats',
+      },
+      {
+        // Safe because not transmitting sensitive data
+        httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+      }
+    )
+    .catch(console.error);

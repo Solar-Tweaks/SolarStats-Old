@@ -12,6 +12,7 @@ export interface Config {
     host: string;
     port: number;
   };
+  statistics: boolean;
 }
 
 export interface PlayerData {

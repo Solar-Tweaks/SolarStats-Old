@@ -8,5 +8,6 @@
     // Server to connect to
     "host": "hypixel.net", // IP of the server
     "port": 25565 // Port of the server
-  }
+  },
+  "statistics": true // Allow Solar Tweaks to track statistics. Statistics tracked: when you launch the game (They are of course anonymous)
 }

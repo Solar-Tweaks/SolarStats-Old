@@ -87,6 +87,9 @@ export const configSchema = {
       },
       type: 'object',
     },
+    statistics: {
+      type: 'boolean',
+    },
   },
   type: 'object',
 };
@@ -101,4 +104,5 @@ export const defaultConfig: Config = {
     host: 'hypixel.net',
     port: 25565,
   },
+  statistics: true,
 };
