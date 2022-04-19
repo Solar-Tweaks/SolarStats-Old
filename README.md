@@ -61,6 +61,13 @@ Just execute the executable file. For non windows operating system you can use
 $ .\path\to\executable
 ```
 
+### Arguments
+
+Solar Stats supports the following arguments:
+- `--skipUpdater`: Skip the update check at startup
+- `--noTracking`: Don't track statistics
+- `--config=/path/to/config.json`: Use a custom config file (default config file is `config.json` in the current working directory)
+
 # Building from source 🏗️
 
 Clone the repository on your machine using

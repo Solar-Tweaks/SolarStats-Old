@@ -4,7 +4,12 @@ import { existsSync, writeFileSync, readFileSync } from 'fs';
 import { writeFile, readFile } from 'fs/promises';
 import Logger from '../Classes/Logger';
 
-const filePath = './config.json';
+const customConfigPath = process.argv
+  .find((arg) => arg.startsWith('--config='))
+  ?.split('=')[1];
+const filePath = customConfigPath || './config.json';
+
+Logger.info(`Using config file: ${filePath}`);
 
 export default function getConfig(): Config {
   const exists = existsSync(filePath);

@@ -21,7 +21,12 @@ console.log(`\n   _____       _               _____ _        _
 export let config = getConfig();
 export const hypixelClient = createClient(config.apiKey);
 
-if (process.platform === 'win32' && config.checkForUpdates) update();
+if (
+  process.platform === 'win32' &&
+  config.checkForUpdates &&
+  !process.argv.includes('--skipUpdater')
+)
+  update();
 
 const proxy = new InstantConnectProxy({
   loginHandler: (client) => ({
@@ -121,7 +126,7 @@ export const isPacked: boolean = Object.prototype.hasOwnProperty.call(
 );
 
 // Statistics
-if (config.statistics)
+if (config.statistics && !process.argv.includes('--noTracking'))
   axios
     .post(
       'https://server.solartweaks.com/api/launch',
