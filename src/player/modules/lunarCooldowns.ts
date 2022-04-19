@@ -1,9 +1,22 @@
 import { config } from '../..';
+import Item from '../../Classes/Item';
 import PlayerModule from '../PlayerModule';
+
+const settingItem = new Item(347);
+settingItem.displayName = '§fLunar Cooldowns';
+settingItem.lore = [
+  '',
+  '§7Adds support for Lunar',
+  '§7Cooldowns in some modes',
+  '',
+  `§7Current: §${config.lunarCooldowns ? 'aEnabled' : 'cDisabled'}`,
+];
 
 const playerModule = new PlayerModule(
   'LunarCooldowns',
-  'Add support for Lunar Cooldowns'
+  'Add support for Lunar Cooldowns',
+  settingItem,
+  'lunarCooldowns'
 );
 
 playerModule.customCode = () => {

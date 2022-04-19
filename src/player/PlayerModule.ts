@@ -1,3 +1,4 @@
+import Item from '../Classes/Item';
 import { ListenerEvents } from '../Types';
 import Player from './Player';
 
@@ -6,12 +7,21 @@ export default class PlayerModule {
   public readonly description: string;
   public event: keyof ListenerEvents;
   public player: Player;
+
   public handler: Function;
   public customCode: () => void;
   public onLocationUpdate: () => void;
   public onDisconnect: () => void;
 
-  public constructor(string: string, description: string) {
+  public settingItem: Item;
+  public configKey: string;
+
+  public constructor(
+    string: string,
+    description: string,
+    settingItem: Item,
+    configKey: string
+  ) {
     this.name = string;
     this.description = description;
 
@@ -19,6 +29,9 @@ export default class PlayerModule {
     this.customCode = () => {};
     this.onLocationUpdate = () => {};
     this.onDisconnect = () => {};
+
+    this.settingItem = settingItem;
+    this.configKey = configKey;
   }
 
   public setPlayer(player: Player): PlayerModule {

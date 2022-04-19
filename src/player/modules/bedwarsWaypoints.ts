@@ -1,10 +1,23 @@
 import { config } from '../..';
+import Item from '../../Classes/Item';
 import WaypointsMappings from '../../utils/WaypointsMappings';
 import PlayerModule from '../PlayerModule';
 
+const settingItem = new Item(395);
+settingItem.displayName = '§fBedwars Waypoints';
+settingItem.lore = [
+  '',
+  '§7Adds waypoints to each',
+  '§7base in Bedwars',
+  '',
+  `§7Current: §${config.bedwarsWaypoints ? 'aEnabled' : 'cDisabled'}`,
+];
+
 const playerModule = new PlayerModule(
   'BedwarsWaypoints',
-  'Add waypoints for each base in bedwars'
+  'Add waypoints for each base in bedwars',
+  settingItem,
+  'bedwarsWaypoints'
 );
 
 playerModule.onLocationUpdate = () => {

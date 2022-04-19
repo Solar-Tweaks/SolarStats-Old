@@ -8,6 +8,8 @@ export interface Config {
   bedwarsWaypoints: boolean;
   lunarCooldowns: boolean;
   bedwarsTeammates: boolean;
+  mvpppEmotes: boolean;
+  stats: boolean;
   server: {
     host: string;
     port: number;

@@ -1,10 +1,23 @@
 import axios from 'axios';
 import { config } from '../..';
+import Item from '../../Classes/Item';
 import PlayerModule from '../PlayerModule';
+
+const settingItem = new Item(355);
+settingItem.displayName = '§fBedwars Teammates';
+settingItem.lore = [
+  '',
+  '§7Adds support for Lunar',
+  '§7TeamView mod in Bedwars',
+  '',
+  `§7Current: §${config.bedwarsTeammates ? 'aEnabled' : 'cDisabled'}`,
+];
 
 const playerModule = new PlayerModule(
   'BedwarsTeammates',
-  'Add support for TeamView in Bedwars'
+  'Add support for TeamView in Bedwars',
+  settingItem,
+  'bedwarsTeammates'
 );
 
 playerModule.customCode = () => {

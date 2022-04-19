@@ -2,7 +2,8 @@ import { config, reloadConfig } from '..';
 import Command from '../Classes/Command';
 import Inventory from '../Classes/Inventory';
 import Item from '../Classes/Item';
-import { InventoryType } from '../Types';
+import Logger from '../Classes/Logger';
+import { InventoryType, WindowClickEvent } from '../Types';
 import { setValue } from '../utils/config';
 
 const command = new Command(
@@ -43,46 +44,6 @@ command.onTriggered = async (chatCommand, args) => {
     `§7Current: §o${config.apiKey ?? '§rnone'}`,
   ];
 
-  const bedrock = new Item(7);
-  bedrock.displayName = '§fHeight Limit Delay Fix';
-  bedrock.lore = [
-    '',
-    '§7Makes the the height limit in',
-    '§7bridge more responsive',
-    '',
-    `§7Current: §${config.heightLimitDelayFix ? 'aEnabled' : 'cDisabled'}`,
-  ];
-
-  const map = new Item(395);
-  map.displayName = '§fBedwars Waypoints';
-  map.lore = [
-    '',
-    '§7Adds waypoints to each',
-    '§7base in Bedwars',
-    '',
-    `§7Current: §${config.bedwarsWaypoints ? 'aEnabled' : 'cDisabled'}`,
-  ];
-
-  const clock = new Item(347);
-  clock.displayName = '§fLunar Cooldowns';
-  clock.lore = [
-    '',
-    '§7Adds support for Lunar',
-    '§7Cooldowns in some modes',
-    '',
-    `§7Current: §${config.lunarCooldowns ? 'aEnabled' : 'cDisabled'}`,
-  ];
-
-  const bed = new Item(355);
-  bed.displayName = '§fBedwars Teammates';
-  bed.lore = [
-    '',
-    '§7Adds support for Lunar',
-    '§7TeamView mod in Bedwars',
-    '',
-    `§7Current: §${config.bedwarsTeammates ? 'aEnabled' : 'cDisabled'}`,
-  ];
-
   const commandBlock = new Item(137);
   commandBlock.displayName = '§fServer actions';
   commandBlock.lore = [
@@ -107,15 +68,29 @@ command.onTriggered = async (chatCommand, args) => {
   ];
 
   inventory.addItems([
-    { item: nametag, position: 12 },
-    { item: bedrock, position: 14 },
-    { item: map, position: 20 },
-    { item: clock, position: 22 },
-    { item: bed, position: 24 },
+    { item: nametag, position: 0 },
     { item: commandBlock, position: 36 },
     { item: barrier, position: 40 },
     { item: paper, position: 44 },
   ]);
+
+  const settingsMutator: {
+    [key: number]: (event: WindowClickEvent) => void;
+  } = {};
+
+  for (const module of command.player.modules) {
+    const slot = Object.keys(inventory.items).length - 3;
+    inventory.addItem(module.settingItem, slot);
+    settingsMutator[slot] = async (event) => {
+      event.cancel(player.client);
+      await setValue(module.configKey, !config[module.configKey]);
+      await reloadConfig();
+      module.settingItem.lore[4] = `§7Current: §${
+        config[module.configKey] ? 'aEnabled' : 'cDisabled'
+      }`;
+      inventory.setSlot(player.client, module.settingItem, slot);
+    };
+  }
 
   inventory.on('click', async (event) => {
     if (event.button !== 0 || event.mode !== 0) {
@@ -123,44 +98,19 @@ command.onTriggered = async (chatCommand, args) => {
       return;
     }
 
-    async function toggleSetting(
-      setting: string,
-      loreIndex: number,
-      item: Item,
-      slot: number
-    ): Promise<void> {
-      event.cancel(player.client);
-      await setValue(setting, !config[setting]);
-      await reloadConfig();
-      item.lore[loreIndex] = `§7Current: §${
-        config[setting] ? 'aEnabled' : 'cDisabled'
-      }`;
-      inventory.setSlot(player.client, item, slot);
-    }
-
     switch (event.slot) {
+      case 0:
       case 12:
       case 44:
-        // refreshInventory();
         event.cancel(player.client);
-        break;
-      case 14:
-        await toggleSetting('heightLimitDelayFix', 4, bedrock, 14);
-        break;
-      case 20:
-        await toggleSetting('bedwarsWaypoints', 4, map, 20);
-        break;
-      case 22:
-        await toggleSetting('lunarCooldowns', 4, clock, 22);
-        break;
-      case 24:
-        await toggleSetting('bedwarsTeammates', 4, bed, 24);
         break;
       case 40:
         inventory.close(player);
         break;
-
       default:
+        // Other slot, handling here
+        if (settingsMutator[event.slot]) settingsMutator[event.slot](event);
+
         break;
     }
   });

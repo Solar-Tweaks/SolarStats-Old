@@ -1,11 +1,24 @@
 import { Client, ServerClient } from 'minecraft-protocol';
 import { config } from '../..';
+import Item from '../../Classes/Item';
 import { BlockPlacePacket } from '../../Types';
 import PlayerModule from '../PlayerModule';
 
+const settingItem = new Item(7);
+settingItem.displayName = '§fHeight Limit Delay Fix';
+settingItem.lore = [
+  '',
+  '§7Makes the the height limit in',
+  '§7bridge more responsive',
+  '',
+  `§7Current: §${config.heightLimitDelayFix ? 'aEnabled' : 'cDisabled'}`,
+];
+
 const playerModule = new PlayerModule(
   'BridgeHeightLimit',
-  'Make block removal faster when reaching height limit in bridge'
+  'Make block removal faster when reaching height limit in bridge',
+  settingItem,
+  'heightLimitDelayFix'
 );
 
 playerModule.event = 'place_block';

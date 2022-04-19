@@ -9,8 +9,6 @@ const customConfigPath = process.argv
   ?.split('=')[1];
 const filePath = customConfigPath || './config.json';
 
-Logger.info(`Using config file: ${filePath}`);
-
 export default function getConfig(): Config {
   const exists = existsSync(filePath);
 
@@ -94,6 +92,9 @@ export const configSchema = {
     lunarCooldowns: {
       type: 'boolean',
     },
+    mvpppEmotes: {
+      type: 'boolean',
+    },
     server: {
       properties: {
         host: {
@@ -108,6 +109,9 @@ export const configSchema = {
     statistics: {
       type: 'boolean',
     },
+    stats: {
+      type: 'boolean',
+    },
   },
   type: 'object',
 };
@@ -118,6 +122,8 @@ export const defaultConfig: Config = {
   heightLimitDelayFix: true,
   lunarCooldowns: true,
   bedwarsTeammates: true,
+  mvpppEmotes: true,
+  stats: true,
   server: {
     host: 'hypixel.net',
     port: 25565,

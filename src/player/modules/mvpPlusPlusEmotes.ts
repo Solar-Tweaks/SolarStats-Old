@@ -1,10 +1,23 @@
 import { Client, PacketMeta, ServerClient } from 'minecraft-protocol';
 import { config } from '../..';
+import Item from '../../Classes/Item';
 import PlayerModule from '../PlayerModule';
+
+const settingItem = new Item(175);
+settingItem.displayName = '§fMVP++ Emotes';
+settingItem.lore = [
+  '',
+  '§7Send NVP++ emotes',
+  '§7without having MVP++',
+  '',
+  `§7Current: §${config.mvpppEmotes ? 'aEnabled' : 'cDisabled'}`,
+];
 
 const playerModule = new PlayerModule(
   'MVP++Emotes',
-  'Make MVP++ emotes available to all players'
+  'Make MVP++ emotes available to all players',
+  settingItem,
+  'mvpppEmotes'
 );
 
 const base = {
@@ -64,7 +77,10 @@ const onOutgoingPacket = (
     return;
 
   for (const syntax in emotes)
-    if (Object.prototype.hasOwnProperty.call(emotes, syntax))
+    if (
+      Object.prototype.hasOwnProperty.call(emotes, syntax) &&
+      config.mvpppEmotes
+    )
       data.message = data.message.replace(syntax, emotes[syntax]);
   toServer.write(meta.name, data);
 };
