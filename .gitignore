@@ -5,4 +5,3 @@ config.json
 .vscode
 packetDump.json
 src/player/modules/stats.ts
-package-lock.json
