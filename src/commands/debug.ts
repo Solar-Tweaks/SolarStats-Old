@@ -1,17 +1,9 @@
-import { readFile } from 'fs/promises';
-import { join } from 'path';
-import { isPacked, config } from '..';
+import { config, version } from '..';
 import Command from '../Classes/Command';
 
 const command = new Command('sdebug', []);
 
 command.onTriggered = async () => {
-  const version: string = JSON.parse(
-    await readFile(
-      isPacked ? join(__dirname, '..', '..', 'package.json') : 'package.json',
-      'utf8'
-    )
-  ).version;
   const infos = [
     `§aVersion: §r${version}`,
     `§aUUID: §r${command.player.uuid}`,

@@ -12,19 +12,31 @@ import Logger from './Classes/Logger';
 import * as chalk from 'chalk';
 import update from './utils/updater';
 
+export async function reloadConfig() {
+  config = await readConfig();
+}
+export const isPacked: boolean = Object.prototype.hasOwnProperty.call(
+  process,
+  'pkg'
+);
+export const version = JSON.parse(
+  readFileSync(
+    isPacked ? join(__dirname, '..', '..', 'package.json') : 'package.json',
+    'utf8'
+  )
+).version;
+export let config = getConfig();
+export const hypixelClient = createClient(config.apiKey);
+
 console.log(`\n   _____       _               _____ _        _       
   / ____|     | |             / ____| |      | |      
  | (___   ___ | | __ _ _ __  | (___ | |_ __ _| |_ ___ 
   \\___ \\ / _ \\| |/ _\` | '__|  \\___ \\| __/ _\` | __/ __|
   ____) | (_) | | (_| | |     ____) | || (_| | |_\\__ \\
  |_____/ \\___/|_|\\__,_|_|    |_____/ \\__\\__,_|\\__|___/`);
-const version = JSON.parse(readFileSync('./package.json', 'utf8')).version;
 let versionString = '';
-for (let i = 0; i < 53 - version.length; i++) versionString += ' ';
+for (let i = 0; i < 52 - version.length; i++) versionString += ' ';
 console.log(`${versionString}v${version}\n`);
-
-export let config = getConfig();
-export const hypixelClient = createClient(config.apiKey);
 
 if (
   process.platform === 'win32' &&
@@ -74,6 +86,7 @@ import lunarCooldowns from './player/modules/lunarCooldowns';
 import bedwarsWaypoints from './player/modules/bedwarsWaypoints';
 import bedwarsTeammates from './player/modules/bedwarsTeammates';
 import mvpPlusPlusEmotes from './player/modules/mvpPlusPlusEmotes';
+import { join } from 'path';
 
 let stats: PlayerModule | undefined;
 try {
@@ -121,14 +134,6 @@ proxy.on('end', (username) => {
   Logger.info(`${chalk.italic.bold(username)} disconnected from the proxy`);
   player.disconnect();
 });
-
-export async function reloadConfig() {
-  config = await readConfig();
-}
-export const isPacked: boolean = Object.prototype.hasOwnProperty.call(
-  process,
-  'pkg'
-);
 
 // Statistics
 if (config.statistics && !process.argv.includes('--noTracking'))
