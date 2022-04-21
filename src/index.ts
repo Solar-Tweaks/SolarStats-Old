@@ -1,4 +1,5 @@
 import { InstantConnectProxy } from 'prismarine-proxy';
+import { readFileSync } from 'fs';
 import { createClient } from './utils/hypixel';
 import Listener from './Classes/Listener';
 import Player from './player/Player';
@@ -16,7 +17,11 @@ console.log(`\n   _____       _               _____ _        _
  | (___   ___ | | __ _ _ __  | (___ | |_ __ _| |_ ___ 
   \\___ \\ / _ \\| |/ _\` | '__|  \\___ \\| __/ _\` | __/ __|
   ____) | (_) | | (_| | |     ____) | || (_| | |_\\__ \\
- |_____/ \\___/|_|\\__,_|_|    |_____/ \\__\\__,_|\\__|___/\n\n`);
+ |_____/ \\___/|_|\\__,_|_|    |_____/ \\__\\__,_|\\__|___/`);
+const version = JSON.parse(readFileSync('./package.json', 'utf8')).version;
+let versionString = '';
+for (let i = 0; i < 53 - version.length; i++) versionString += ' ';
+console.log(`${versionString}v${version}\n`);
 
 export let config = getConfig();
 export const hypixelClient = createClient(config.apiKey);
