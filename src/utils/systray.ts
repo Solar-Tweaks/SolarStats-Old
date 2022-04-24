@@ -1,8 +1,8 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import SysTray, { MenuItem } from 'systray';
 import { reloadConfig } from '..';
 import Logger from '../Classes/Logger';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 
 export default function setupTray(): SysTray {
   if (process.argv.includes('--noTray')) return null;

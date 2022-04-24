@@ -1,18 +1,25 @@
-import { InstantConnectProxy } from 'prismarine-proxy';
-import { readFileSync } from 'fs';
-import { createClient } from './utils/hypixel';
-import Listener from './Classes/Listener';
-import Player from './player/Player';
-import getConfig, { readConfig } from './utils/config';
-import { ping } from 'minecraft-protocol';
-import { NIL } from 'uuid';
 import axios from 'axios';
-import * as https from 'https';
-import Logger from './Classes/Logger';
 import * as chalk from 'chalk';
-import update from './utils/updater';
+import { ping } from 'minecraft-protocol';
+import { readFileSync } from 'node:fs';
+import * as https from 'node:https';
+import { join } from 'node:path';
+import { InstantConnectProxy } from 'prismarine-proxy';
+import { NIL } from 'uuid';
+import Listener from './Classes/Listener';
+import Logger from './Classes/Logger';
+import bedwarsTeammates from './player/modules/bedwarsTeammates';
+import bedwarsWaypoints from './player/modules/bedwarsWaypoints';
+import bridgeHeightLimit from './player/modules/bridgeHeightLimit';
+import lunarCooldowns from './player/modules/lunarCooldowns';
+import mvpPlusPlusEmotes from './player/modules/mvpPlusPlusEmotes';
+import Player from './player/Player';
+/* Player Modules */
+import PlayerModule from './player/PlayerModule';
+import getConfig, { readConfig } from './utils/config';
+import { createClient } from './utils/hypixel';
 import setupTray from './utils/systray';
-import { join } from 'path';
+import update from './utils/updater';
 
 export async function reloadConfig() {
   config = await readConfig();
@@ -80,14 +87,6 @@ const proxy = new InstantConnectProxy({
 Logger.info('Proxy started');
 
 export const listener = new Listener(proxy);
-
-/* Player Modules */
-import PlayerModule from './player/PlayerModule';
-import bridgeHeightLimit from './player/modules/bridgeHeightLimit';
-import lunarCooldowns from './player/modules/lunarCooldowns';
-import bedwarsWaypoints from './player/modules/bedwarsWaypoints';
-import bedwarsTeammates from './player/modules/bedwarsTeammates';
-import mvpPlusPlusEmotes from './player/modules/mvpPlusPlusEmotes';
 
 let stats: PlayerModule | undefined;
 try {

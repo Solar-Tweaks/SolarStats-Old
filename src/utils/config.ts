@@ -1,8 +1,8 @@
 import { validate } from 'jsonschema';
-import { Config } from '../Types';
-import { existsSync, writeFileSync, readFileSync } from 'fs';
-import { writeFile, readFile } from 'fs/promises';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { readFile, writeFile } from 'node:fs/promises';
 import Logger from '../Classes/Logger';
+import { Config } from '../Types';
 
 const customConfigPath = process.argv
   .find((arg) => arg.startsWith('--config='))

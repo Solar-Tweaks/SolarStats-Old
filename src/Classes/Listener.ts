@@ -1,8 +1,8 @@
-import { EventEmitter } from 'events';
-import TypedEmitter from 'typed-emitter';
-import { ListenerEvents } from '../Types';
+import { EventEmitter } from 'node:events';
 import { InstantConnectProxy } from 'prismarine-proxy';
+import TypedEmitter from 'typed-emitter';
 import { player } from '..';
+import { ListenerEvents } from '../Types';
 import Logger from './Logger';
 
 export default class Listener extends (EventEmitter as new () => TypedEmitter<ListenerEvents>) {

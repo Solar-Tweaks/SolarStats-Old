@@ -1,5 +1,5 @@
-import { CommandSyntax, CommandSyntaxType } from '../Types';
 import Player from '../player/Player';
+import { CommandSyntax, CommandSyntaxType } from '../Types';
 import Logger from './Logger';
 
 export default class Command {

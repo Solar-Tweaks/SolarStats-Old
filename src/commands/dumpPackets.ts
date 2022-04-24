@@ -1,6 +1,6 @@
 import { PacketMeta } from 'minecraft-protocol';
+import { writeFile } from 'node:fs/promises';
 import Command from '../Classes/Command';
-import * as fs from 'fs/promises';
 
 const command = new Command(
   'dumppackets',
@@ -46,7 +46,7 @@ command.onTriggered = (chatCommand, args) => {
 
   setTimeout(async () => {
     command.player.proxy.removeListener('incoming', callback);
-    await fs.writeFile('packetDump.json', JSON.stringify(packets, null, 2));
+    await writeFile('packetDump.json', JSON.stringify(packets, null, 2));
 
     command.player.lcPlayer.sendNotification(
       `Dumped ${packets.length} packets to packetDump.json`,

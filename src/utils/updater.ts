@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { readFile } from 'fs/promises';
-import * as https from 'https';
 import { DownloaderHelper } from 'node-downloader-helper';
+import { readFile } from 'node:fs/promises';
+import * as https from 'node:https';
 import { join } from 'path';
 import { config, isPacked } from '..';
 import Logger from '../Classes/Logger';

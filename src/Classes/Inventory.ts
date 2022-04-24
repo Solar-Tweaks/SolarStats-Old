@@ -1,10 +1,10 @@
-import { EventEmitter } from 'events';
 import { Client, PacketMeta } from 'minecraft-protocol';
+import { EventEmitter } from 'node:events';
 import { InstantConnectProxy } from 'prismarine-proxy';
 import TypedEmitter from 'typed-emitter';
+import Player from '../player/Player';
 import { InventoryEvents, InventoryType } from '../Types';
 import Item from './Item';
-import Player from '../player/Player';
 
 export default class Inventory extends (EventEmitter as new () => TypedEmitter<InventoryEvents>) {
   public items: { [key: string]: Item };

@@ -1,20 +1,20 @@
+import { LCPlayer } from '@solar-tweaks/minecraft-protocol-lunarclient';
 import { Status } from 'hypixel-api-reborn';
 import { Client } from 'minecraft-protocol';
-import { LCPlayer } from '@solar-tweaks/minecraft-protocol-lunarclient';
+import { InstantConnectProxy } from 'prismarine-proxy';
+import CommandHandler from '../Classes/CommandHandler';
+import Listener from '../Classes/Listener';
+import Logger from '../Classes/Logger';
+import debug from '../commands/debug';
+import dodge from '../commands/dodge';
+import dumpPackets from '../commands/dumpPackets';
+import requeue from '../commands/requeue';
+import settings from '../commands/settings';
+import solarsucks from '../commands/solarsucks';
+import stats from '../commands/stats';
 import { Team } from '../Types';
 import { fetchPlayerLocation } from '../utils/hypixel';
-import Listener from '../Classes/Listener';
-import CommandHandler from '../Classes/CommandHandler';
-import { InstantConnectProxy } from 'prismarine-proxy';
-import dodge from '../commands/dodge';
-import requeue from '../commands/requeue';
-import stats from '../commands/stats';
-import dumpPackets from '../commands/dumpPackets';
-import settings from '../commands/settings';
-import debug from '../commands/debug';
-import solarsucks from '../commands/solarsucks';
 import PlayerModule from './PlayerModule';
-import Logger from '../Classes/Logger';
 
 export default class Player {
   public readonly crashedModules: PlayerModule[];
