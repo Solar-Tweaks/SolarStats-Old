@@ -1,17 +1,13 @@
 import { LCPlayer } from '@solar-tweaks/minecraft-protocol-lunarclient';
 import { Status } from 'hypixel-api-reborn';
 import { Client } from 'minecraft-protocol';
+import { readdirSync } from 'node:fs';
+import { join } from 'node:path';
 import { InstantConnectProxy } from 'prismarine-proxy';
+import Command from '../Classes/Command';
 import CommandHandler from '../Classes/CommandHandler';
 import Listener from '../Classes/Listener';
 import Logger from '../Classes/Logger';
-import debug from '../commands/debug';
-import dodge from '../commands/dodge';
-import dumpPackets from '../commands/dumpPackets';
-import requeue from '../commands/requeue';
-import settings from '../commands/settings';
-import solarsucks from '../commands/solarsucks';
-import stats from '../commands/stats';
 import { Team } from '../Types';
 import { fetchPlayerLocation } from '../utils/hypixel';
 import loadPlugins, { PluginInfo } from '../utils/plugins';
@@ -52,15 +48,26 @@ export default class Player {
       outgoing: ['chat', 'block_place'],
     };
 
-    this.commandHandler = new CommandHandler(this.proxy).registerCommand([
-      dodge.setPlayer(this),
-      requeue.setPlayer(this),
-      stats.setPlayer(this),
-      dumpPackets.setPlayer(this),
-      settings.setPlayer(this),
-      debug.setPlayer(this),
-      solarsucks.setPlayer(this),
-    ]);
+    const commands: Command[] = [];
+    readdirSync(join(__dirname, '..', 'commands')).forEach((file) => {
+      try {
+        if (!file.endsWith('.js')) return;
+        const command = require(join(
+          __dirname,
+          '..',
+          'commands',
+          file
+        )).default;
+
+        if (command instanceof Command) commands.push(command.setPlayer(this));
+        else Logger.warn(`Command in file ${file} is not a command module.`);
+      } catch (error) {
+        Logger.error(`Couldn't load command ${file}`, error);
+      }
+    });
+    this.commandHandler = new CommandHandler(this.proxy).registerCommand(
+      commands
+    );
 
     this.modules.forEach((module) => module.setPlayer(this));
 

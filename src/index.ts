@@ -48,6 +48,7 @@ if (
 )
   update();
 
+let hypixelLatency = 0;
 const proxy = new InstantConnectProxy({
   loginHandler: (client) => ({
     auth: 'microsoft',
@@ -58,15 +59,22 @@ const proxy = new InstantConnectProxy({
     version: '1.8.9',
     motd: '§cSolar Stats Proxy',
     port: 25556,
-    beforePing: async (response, client, callback) => {
+    beforeServerInfo: async (response, client, callback) => {
       response = await ping({
         host: config.server.host,
         port: config.server.port,
         version: client.version,
       });
+      hypixelLatency = response.latency;
       response.players.sample = [{ name: '§cSolar Stats Proxy', id: NIL }];
 
       callback(null, response);
+    },
+    beforePing: (client, packet) => {
+      setTimeout(() => {
+        client.write('ping', { time: packet.time });
+        client.end();
+      }, hypixelLatency);
     },
     validateChannelProtocol: false,
   },
