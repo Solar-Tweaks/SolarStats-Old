@@ -54,6 +54,7 @@
     "assets": [
       "node_modules/minecraft-packets/minecraft-packets/data/pc/1.8",
       "assets",
+      "build/player/modules",
       "package.json"
     ],
     "targets": [

@@ -1,20 +1,14 @@
 import axios from 'axios';
 import * as chalk from 'chalk';
 import { ping } from 'minecraft-protocol';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import * as https from 'node:https';
 import { join } from 'node:path';
 import { InstantConnectProxy } from 'prismarine-proxy';
 import { NIL } from 'uuid';
 import Listener from './Classes/Listener';
 import Logger from './Classes/Logger';
-import bedwarsTeammates from './player/modules/bedwarsTeammates';
-import bedwarsWaypoints from './player/modules/bedwarsWaypoints';
-import bridgeHeightLimit from './player/modules/bridgeHeightLimit';
-import lunarCooldowns from './player/modules/lunarCooldowns';
-import mvpPlusPlusEmotes from './player/modules/mvpPlusPlusEmotes';
 import Player from './player/Player';
-/* Player Modules */
 import PlayerModule from './player/PlayerModule';
 import getConfig, { readConfig } from './utils/config';
 import { createClient } from './utils/hypixel';
@@ -88,22 +82,18 @@ Logger.info('Proxy started');
 
 export const listener = new Listener(proxy);
 
-let stats: PlayerModule | undefined;
-try {
-  stats = require('./player/modules/stats').default;
-} catch (error) {
-  if (error.code !== 'MODULE_NOT_FOUND') throw error;
-  Logger.warn('Could not load stats module, this is expected.');
-}
+const modules: PlayerModule[] = [];
+readdirSync(join(__dirname, 'player', 'modules')).forEach((file) => {
+  try {
+    if (!file.endsWith('.js')) return;
+    const module = require(join(__dirname, 'player', 'modules', file)).default;
 
-const modules = [
-  bridgeHeightLimit,
-  lunarCooldowns,
-  bedwarsWaypoints,
-  bedwarsTeammates,
-  mvpPlusPlusEmotes,
-];
-if (stats instanceof PlayerModule) modules.push(stats);
+    if (module instanceof PlayerModule) modules.push(module);
+    else Logger.warn(`Module in file ${file} is not a valid module.`);
+  } catch (error) {
+    Logger.error(`Couldn't load module ${file}`, error);
+  }
+});
 
 export const player = new Player(listener, proxy, modules);
 
