@@ -9,7 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug": "nodemon . --skipUpdater --noTracking",
     "generateConfigSchema": "typescript-json-schema src/Types.ts Config",
-    "build": "node ./scripts/build.js",
+    "clean": "node ./scripts/clean.js",
+    "build": "npm run clean && node ./scripts/build.js",
     "start": "node ."
   },
   "repository": {
@@ -36,6 +37,7 @@
     "minecraft-protocol": "^1.32.0",
     "node-downloader-helper": "^2.1.0",
     "prismarine-proxy": "^1.1.1",
+    "systray": "^1.0.5",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -51,10 +53,11 @@
     "scripts": "build/**/*.js",
     "assets": [
       "node_modules/minecraft-packets/minecraft-packets/data/pc/1.8",
+      "assets",
       "package.json"
     ],
     "targets": [
-      "node14-win-x64"
+      "node16-win-x64"
     ],
     "outputPath": "dist/"
   }

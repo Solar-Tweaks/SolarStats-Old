@@ -3,7 +3,7 @@ import Command from '../Classes/Command';
 
 const command = new Command('sdebug', []);
 
-command.onTriggered = async () => {
+command.onTriggered = () => {
   const infos = [
     `§aVersion: §r${version}`,
     `§aUUID: §r${command.player.uuid}`,

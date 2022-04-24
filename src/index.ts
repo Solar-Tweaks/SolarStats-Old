@@ -11,6 +11,8 @@ import * as https from 'https';
 import Logger from './Classes/Logger';
 import * as chalk from 'chalk';
 import update from './utils/updater';
+import setupTray from './utils/systray';
+import { join } from 'path';
 
 export async function reloadConfig() {
   config = await readConfig();
@@ -21,7 +23,7 @@ export const isPacked: boolean = Object.prototype.hasOwnProperty.call(
 );
 export const version = JSON.parse(
   readFileSync(
-    isPacked ? join(__dirname, '..', '..', 'package.json') : 'package.json',
+    isPacked ? join(__dirname, '..', 'package.json') : 'package.json',
     'utf8'
   )
 ).version;
@@ -86,7 +88,6 @@ import lunarCooldowns from './player/modules/lunarCooldowns';
 import bedwarsWaypoints from './player/modules/bedwarsWaypoints';
 import bedwarsTeammates from './player/modules/bedwarsTeammates';
 import mvpPlusPlusEmotes from './player/modules/mvpPlusPlusEmotes';
-import { join } from 'path';
 
 let stats: PlayerModule | undefined;
 try {
@@ -134,6 +135,8 @@ proxy.on('end', (username) => {
   Logger.info(`${chalk.italic.bold(username)} disconnected from the proxy`);
   player.disconnect();
 });
+
+setupTray();
 
 // Statistics
 if (config.statistics && !process.argv.includes('--noTracking'))
