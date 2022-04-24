@@ -14,12 +14,14 @@ import solarsucks from '../commands/solarsucks';
 import stats from '../commands/stats';
 import { Team } from '../Types';
 import { fetchPlayerLocation } from '../utils/hypixel';
+import loadPlugins, { PluginInfo } from '../utils/plugins';
 import PlayerModule from './PlayerModule';
 
 export default class Player {
   public readonly crashedModules: PlayerModule[];
   public readonly listener: Listener;
   public readonly modules: PlayerModule[];
+  public readonly plugins: PluginInfo[];
   public readonly proxy: InstantConnectProxy;
   public readonly commandHandler: CommandHandler;
 
@@ -41,6 +43,7 @@ export default class Player {
     this.crashedModules = [];
     this.listener = listener;
     this.modules = modules;
+    this.plugins = [];
     this.proxy = proxy;
 
     // Packets that have a custom handling
@@ -60,6 +63,10 @@ export default class Player {
     ]);
 
     this.modules.forEach((module) => module.setPlayer(this));
+
+    (async () => {
+      await loadPlugins(this);
+    })();
   }
 
   public connect(client: Client, server: Client): void {

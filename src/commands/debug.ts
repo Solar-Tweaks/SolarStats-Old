@@ -26,6 +26,9 @@ command.onTriggered = () => {
         ? '§rNone'
         : '§c' + command.player.crashedModules.map((m) => m.name).join(', ')
     }`,
+    `§aLoaded Plugins (${
+      command.player.plugins.length
+    }): §r${command.player.plugins.map((p) => p.name).join(', ')}`,
   ];
   command.player.sendMessage(
     `\n§cSolar Stats - Debug info:\n\n${infos.join('\n')}`

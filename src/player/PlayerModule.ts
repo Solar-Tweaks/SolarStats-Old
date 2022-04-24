@@ -17,12 +17,12 @@ export default class PlayerModule {
   public configKey: string;
 
   public constructor(
-    string: string,
+    name: string,
     description: string,
     settingItem: Item,
     configKey: string
   ) {
-    this.name = string;
+    this.name = name;
     this.description = description;
 
     this.handler = () => {};

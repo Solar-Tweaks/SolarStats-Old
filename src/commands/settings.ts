@@ -78,6 +78,7 @@ command.onTriggered = async (chatCommand, args) => {
   } = {};
 
   for (const module of command.player.modules) {
+    if (!Object.prototype.hasOwnProperty.call(module, 'settingItem')) return;
     const slot = Object.keys(inventory.items).length - 3;
     inventory.addItem(module.settingItem, slot);
     settingsMutator[slot] = async (event) => {
