@@ -68,7 +68,7 @@ Solar Stats supports the following arguments:
 - `--noTracking`: Don't track statistics
 - `--config=/path/to/config.json`: Use a custom config file (default config file is `config.json` in the current working directory)
 - `--noTray`: Disable the tray icon
-- `--noWindow`: Hide the window, if you use this, make sure to keep the tray icon or else you'll have no way to show the window again 
+- `--noWindow`: Hide the window, if you use this, make sure to keep the tray icon or else you'll have no way to show the window again
 
 # Building from source 🏗️
 
