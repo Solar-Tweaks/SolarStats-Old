@@ -10,7 +10,7 @@ settingItem.lore = [
   '§7Adds waypoints to each',
   '§7base in Bedwars',
   '',
-  `§7Current: §${config.bedwarsWaypoints ? 'aEnabled' : 'cDisabled'}`,
+  `§7Current: §${config.modules.bedwarsWaypoints ? 'aEnabled' : 'cDisabled'}`,
 ];
 
 const playerModule = new PlayerModule(
@@ -21,7 +21,7 @@ const playerModule = new PlayerModule(
 );
 
 playerModule.onLocationUpdate = () => {
-  if (!config.bedwarsWaypoints) return;
+  if (!config.modules.bedwarsWaypoints) return;
   const player = playerModule.player;
   if (player.status.game.code === 'BEDWARS' && player.status.map) {
     const map = player.status.map;

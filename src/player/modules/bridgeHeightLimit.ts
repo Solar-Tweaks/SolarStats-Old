@@ -11,7 +11,9 @@ settingItem.lore = [
   '§7Makes the the height limit in',
   '§7bridge more responsive',
   '',
-  `§7Current: §${config.heightLimitDelayFix ? 'aEnabled' : 'cDisabled'}`,
+  `§7Current: §${
+    config.modules.heightLimitDelayFix ? 'aEnabled' : 'cDisabled'
+  }`,
 ];
 
 const playerModule = new PlayerModule(
@@ -31,7 +33,7 @@ playerModule.handler = (
   if (
     playerModule.player.status &&
     playerModule.player.status?.mode &&
-    config.heightLimitDelayFix
+    config.modules.heightLimitDelayFix
   ) {
     if (
       playerModule.player.status.mode.includes('DUELS_BRIDGE_') &&

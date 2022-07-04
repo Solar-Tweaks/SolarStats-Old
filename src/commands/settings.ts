@@ -84,10 +84,12 @@ command.onTriggered = async (chatCommand, args) => {
     inventory.addItem(module.settingItem, slot);
     settingsMutator[slot] = async (event) => {
       event.cancel(player.client);
-      await setValue(module.configKey, !config[module.configKey]);
+      const newConfig = { ...config.modules };
+      newConfig[module.configKey] = !config.modules[module.configKey];
+      await setValue('modules', newConfig);
       await reloadConfig();
       module.settingItem.lore[4] = `§7Current: §${
-        config[module.configKey] ? 'aEnabled' : 'cDisabled'
+        config.modules[module.configKey] ? 'aEnabled' : 'cDisabled'
       }`;
       inventory.setSlot(player.client, module.settingItem, slot);
     };

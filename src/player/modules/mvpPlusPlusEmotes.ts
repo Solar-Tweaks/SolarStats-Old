@@ -10,7 +10,7 @@ settingItem.lore = [
   '§7Send NVP++ emotes',
   '§7without having MVP++',
   '',
-  `§7Current: §${config.mvpppEmotes ? 'aEnabled' : 'cDisabled'}`,
+  `§7Current: §${config.modules.mvpppEmotes ? 'aEnabled' : 'cDisabled'}`,
 ];
 
 const playerModule = new PlayerModule(
@@ -79,7 +79,7 @@ const onOutgoingPacket = (
   for (const syntax in emotes)
     if (
       Object.prototype.hasOwnProperty.call(emotes, syntax) &&
-      config.mvpppEmotes
+      config.modules.mvpppEmotes
     )
       data.message = data.message.replace(syntax, emotes[syntax]);
   toServer.write(meta.name, data);

@@ -8,7 +8,9 @@
     '§7your location updates',
     '',
     `§7Current: §${
-      (await toolbox.getConfig().switchServer) ? 'aEnabled' : 'cDisabled'
+      (await toolbox.getConfig()).modules.switchServer
+        ? 'aEnabled'
+        : 'cDisabled'
     }`,
   ];
 
@@ -23,7 +25,7 @@
 
   module.onLocationUpdate = async () => {
     // This code is executed every time the player's location is updated a.k.a. every time the player changes server on hypixel
-    if (!(await toolbox.getConfig()).switchServer) return;
+    if (!(await toolbox.getConfig()).modules.switchServer) return;
     player.sendMessage('Your location has been updated');
   };
 

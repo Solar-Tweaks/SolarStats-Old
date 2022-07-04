@@ -10,7 +10,7 @@ settingItem.lore = [
   '§7Adds support for Lunar',
   '§7TeamView mod in Bedwars',
   '',
-  `§7Current: §${config.bedwarsTeammates ? 'aEnabled' : 'cDisabled'}`,
+  `§7Current: §${config.modules.bedwarsTeammates ? 'aEnabled' : 'cDisabled'}`,
 ];
 
 const playerModule = new PlayerModule(
@@ -24,7 +24,7 @@ playerModule.customCode = () => {
   const player = playerModule.player;
 
   player.listener.on('team_create', (name) => {
-    if (!config.bedwarsTeammates) return;
+    if (!config.modules.bedwarsTeammates) return;
     const existingTeam = player.teams.find((team) => team.name === name);
     if (existingTeam) return;
     player.teams.push({
@@ -34,12 +34,12 @@ playerModule.customCode = () => {
   });
 
   player.listener.on('team_delete', (name) => {
-    if (!config.bedwarsTeammates) return;
+    if (!config.modules.bedwarsTeammates) return;
     player.teams = player.teams.filter((team) => team.name !== name);
   });
 
   player.listener.on('team_player_add', (name, players) => {
-    if (!config.bedwarsTeammates) return;
+    if (!config.modules.bedwarsTeammates) return;
     player.teams.find((team) => team.name === name)?.players.push(...players);
 
     const playerTeam = player.teams.find((team) =>

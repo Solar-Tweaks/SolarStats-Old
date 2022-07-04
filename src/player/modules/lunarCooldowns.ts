@@ -9,7 +9,7 @@ settingItem.lore = [
   '§7Adds support for Lunar',
   '§7Cooldowns in some modes',
   '',
-  `§7Current: §${config.lunarCooldowns ? 'aEnabled' : 'cDisabled'}`,
+  `§7Current: §${config.modules.lunarCooldowns ? 'aEnabled' : 'cDisabled'}`,
 ];
 
 const playerModule = new PlayerModule(
@@ -23,14 +23,14 @@ playerModule.customCode = () => {
   const player = playerModule.player;
 
   player.listener.on('arrow_slot_empty', () => {
-    if (!config.lunarCooldowns) return;
+    if (!config.modules.lunarCooldowns) return;
     if (player.isInGameMode('DUELS_BRIDGE_')) {
       player.lcPlayer.addCooldownManual('hypixel_bow', 3500, 261);
     }
   });
 
   player.listener.on('arrow_slot_filled', () => {
-    if (!config.lunarCooldowns) return;
+    if (!config.modules.lunarCooldowns) return;
     if (player.isInGameMode('DUELS_BRIDGE_')) {
       player.lcPlayer.removeCooldownManual('hypixel_bow');
     }

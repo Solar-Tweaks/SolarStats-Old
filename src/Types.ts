@@ -4,12 +4,6 @@ import { Client, ServerClient } from 'minecraft-protocol';
 
 export interface Config {
   apiKey: string;
-  heightLimitDelayFix: boolean;
-  bedwarsWaypoints: boolean;
-  lunarCooldowns: boolean;
-  bedwarsTeammates: boolean;
-  mvpppEmotes: boolean;
-  stats: boolean;
   server: {
     host: string;
     port: number;
@@ -18,6 +12,7 @@ export interface Config {
   checkForUpdates: boolean;
   autoDownloadUpdates: boolean;
   statistics: boolean;
+  modules: { [key: string]: boolean };
 }
 
 export interface PlayerData {

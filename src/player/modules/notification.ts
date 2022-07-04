@@ -10,14 +10,14 @@ settingItem.lore = [
   '§7Send a notification when',
   '§7an event happens in bedwars',
   '',
-  `§7Current: §${config.mvpppEmotes ? 'aEnabled' : 'cDisabled'}`,
+  `§7Current: §${config.modules.notifications ? 'aEnabled' : 'cDisabled'}`,
 ];
 
 const playerModule = new PlayerModule(
-  'MVP++Emotes',
-  'Make MVP++ emotes available to all players',
+  'Notifications',
+  'Send a notification when an event happens in bedwars',
   settingItem,
-  'mvpppEmotes'
+  'notifications'
 );
 
 const teams = [

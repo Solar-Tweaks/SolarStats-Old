@@ -71,12 +71,6 @@ export const configSchema = {
     autoDownloadUpdates: {
       type: 'boolean',
     },
-    bedwarsTeammates: {
-      type: 'boolean',
-    },
-    bedwarsWaypoints: {
-      type: 'boolean',
-    },
     checkForUpdates: {
       type: 'boolean',
     },
@@ -86,14 +80,11 @@ export const configSchema = {
       },
       type: 'object',
     },
-    heightLimitDelayFix: {
-      type: 'boolean',
-    },
-    lunarCooldowns: {
-      type: 'boolean',
-    },
-    mvpppEmotes: {
-      type: 'boolean',
+    modules: {
+      additionalProperties: {
+        type: 'boolean',
+      },
+      type: 'object',
     },
     server: {
       properties: {
@@ -109,21 +100,12 @@ export const configSchema = {
     statistics: {
       type: 'boolean',
     },
-    stats: {
-      type: 'boolean',
-    },
   },
   type: 'object',
 };
 
 export const defaultConfig: Config = {
   apiKey: "I can't provide a key, sorry!",
-  bedwarsWaypoints: true,
-  heightLimitDelayFix: true,
-  lunarCooldowns: true,
-  bedwarsTeammates: true,
-  mvpppEmotes: true,
-  stats: true,
   server: {
     host: 'hypixel.net',
     port: 25565,
@@ -132,4 +114,12 @@ export const defaultConfig: Config = {
   checkForUpdates: true,
   autoDownloadUpdates: true,
   statistics: true,
+  modules: {
+    bedwarsWaypoints: true,
+    heightLimitDelayFix: true,
+    lunarCooldowns: true,
+    bedwarsTeammates: true,
+    mvpppEmotes: true,
+    stats: true,
+  },
 };
