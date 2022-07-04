@@ -2,6 +2,7 @@ import { config, reloadConfig } from '..';
 import Command from '../Classes/Command';
 import Inventory from '../Classes/Inventory';
 import Item from '../Classes/Item';
+import Logger from '../Classes/Logger';
 import { InventoryType, WindowClickEvent } from '../Types';
 import { setValue } from '../utils/config';
 
@@ -93,7 +94,7 @@ command.onTriggered = async (chatCommand, args) => {
   }
 
   inventory.on('click', (event) => {
-    if (event.button !== 0 || event.mode !== 0) {
+    if (event.mode !== 0) {
       event.cancel(player.client);
       return;
     }
@@ -103,6 +104,20 @@ command.onTriggered = async (chatCommand, args) => {
       case 12:
       case 44:
         event.cancel(player.client);
+        break;
+      case 36:
+        event.cancel(player.client);
+
+        if (event.button === 0) {
+          player.client.end('Stopping server...');
+          Logger.info('Stopping server...');
+          return process.exit(0);
+        }
+
+        if (event.button === 1) {
+          player.sendMessage('§cNot implemented yet!');
+        }
+
         break;
       case 40:
         inventory.close(player);
