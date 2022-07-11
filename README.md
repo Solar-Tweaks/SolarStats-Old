@@ -3,48 +3,67 @@
 ![GitHub](https://img.shields.io/github/license/Solar-Tweaks/SolarStats?style=for-the-badge)
 ![Maintenance](https://img.shields.io/maintenance/yes/2022?style=for-the-badge)
 
-Minecraft proxy server for Hypixel. It's like a stats overlay, but better. This program will be integrated in Solar Tweaks V4. For now you can build it by yourself and enjoy it before a release. And as a lot of our projects, this one is also open source!
+Minecraft proxy server for Hypixel. It's like a stats overlay, but better. For now you must build it yourself and enjoy it before a release. And as a lot of our projects, this one is also open source!
 
 **⚠️ But this version may have bugs!**
-
-# Downloading ⬇️
-
-For now you must [build it yourself](#building-from-source-%EF%B8%8F).
 
 # Usage ⚒️
 
 To use it you need to have [NodeJS](https://nodejs.org/en/) installed. _(LTS version is recommended)_
 
+# Building from source 🏗️
+
+Clone the repository on your machine using
+
+```bash
+$ git clone https://github.com/Solar-Tweaks/SolarStats
+```
+
+Once the repo is downloaded move to the directory and install the dependencies
+
+```bash
+$ cd SolarStats
+$ npm install
+```
+
+You can now build the project, you will be able to use the exe file located in the `dist` folder. Or use the `npm start` command to directly run the compiled TypeScript
+
+```bash
+$ npm run build
+```
+
 ## Configuration ⚙️
 
-At the root of the project (or in the same directory as the executable) create a `config.json` file with the following content: _(You can also find the content of this file in the `config.example.jsonc` file)_
+At the root of the project (or in the same directory as the executable) create a `config.json` file with the following content:
 
 <!-- prettier-ignore-start -->
 ```json5
 {
-  "apiKey": "", // Your Hypixel API key (`/api` in game)
-  "heightLimitDelayFix": true, // Makes the delay before a block is removed when above the height ultra fast,
-  "bedwarsWaypoints": true, // Enable waypoints for Bedwars
-  "lunarCooldowns": true, // Enable Lunar cooldown mod (arrow in bridge for example)
-  "bedwarsTeammates": true, // Make the TeamView mod work for Bedwars
+  "apiKey": "API KEY HERE",
   "server": {
-    // Server to connect to
-    "host": "hypixel.net", // IP of the server
-    "port": 25565 // Port of the server
+    "host": "hypixel.net",
+    "port": 25565
   },
   "customEmotes": {
-    ":solar:": "☀" // "syntax": "emote (syntax is the message you type in chat, and the emote is the one you see)"
+    ":solar:": "☀",
+    ":lunar:": "☾"
   },
-  "checkForUpdates": true, // Check for updates on startup
-  "autoDownloadUpdates": true, // Automatically download updates if available
-  "statistics": true // Allow Solar Tweaks to track statistics. Statistics tracked: when you launch the proxy (They are of course anonymous)
+  "checkForUpdates": true,
+  "autoDownloadUpdates": true,
+  "statistics": true,
+  "modules": {
+    "bedwarsWaypoints": true,
+    "heightLimitDelayFix": true,
+    "lunarCooldowns": true,
+    "bedwarsTeammates": true,
+    "mvpppEmotes": true,
+    "stats": true
+  }
 }
 ```
 <!-- prettier-ignore-end -->
 
 ## Starting the server 🚀
-
-Make sure to [have built](#building-from-source-%EF%B8%8F) the server before starting it.
 
 ### With NodeJS
 
@@ -68,27 +87,6 @@ Solar Stats supports the following arguments:
 - `--noTracking`: Don't track statistics
 - `--config=/path/to/config.json`: Use a custom config file (default config file is `config.json` in the current working directory)
 - `--noTray`: Disable the tray icon
-
-# Building from source 🏗️
-
-Clone the repository on your machine using
-
-```bash
-$ git clone https://github.com/Solar-Tweaks/SolarStats
-```
-
-Once the repo is downloaded move to the directory and install the dependencies
-
-```bash
-$ cd SolarStats
-$ npm install
-```
-
-You can now build the project, you will be able to use the exe file located in the `dist` folder. Or use the `npm start` command to directly run the compiled TypeScript
-
-```bash
-$ npm run build
-```
 
 # Authenticating 🔒
 
