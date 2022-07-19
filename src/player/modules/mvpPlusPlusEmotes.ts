@@ -7,7 +7,7 @@ const settingItem = new Item(175);
 settingItem.displayName = '§fMVP++ Emotes';
 settingItem.lore = [
   '',
-  '§7Send NVP++ emotes',
+  '§7Send MVP++ emotes',
   '§7without having MVP++',
   '',
   `§7Current: §${config.modules.mvpppEmotes ? 'aEnabled' : 'cDisabled'}`,
