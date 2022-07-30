@@ -1,11 +1,13 @@
 import { mkdir, readdir, readFile, stat } from 'node:fs/promises';
 import { join } from 'node:path';
+import { createContext, runInContext } from 'node:vm';
 import Command from '../Classes/Command';
+import Inventory from '../Classes/Inventory';
 import Item from '../Classes/Item';
 import Logger from '../Classes/Logger';
 import Player from '../player/Player';
 import PlayerModule from '../player/PlayerModule';
-import { readConfig } from './config';
+import { readConfig, readConfigSync } from './config';
 
 export default async function loadPlugins(player: Player): Promise<void> {
   const folder = 'plugins';
@@ -17,7 +19,7 @@ export default async function loadPlugins(player: Player): Promise<void> {
     if (!file.endsWith('.js')) continue;
 
     try {
-      const loadedPlugin = loadPlugin(
+      const loadedPlugin = await loadPlugin(
         player,
         await readFile(join(folder, file), 'utf8'),
         file
@@ -36,29 +38,51 @@ export function loadPlugin(
   plugin: string,
   file: string
 ): PluginInfo {
-  const toolbox = {
-    Logger,
-    Command,
-    PlayerModule,
-    Item,
-    getConfig: readConfig,
-  };
-
   let info: PluginInfo;
 
-  function registerPlugin(plugin: PluginInfo): void {
-    info = plugin;
-  }
+  const context = createContext({
+    console: console,
+    __dirname: __dirname,
+    __cwd: process.cwd(),
+    __plugins: join(process.cwd(), 'plugins'),
+    toolbox: {
+      Logger,
+      Command,
+      PlayerModule,
+      Inventory,
+      Item,
+      getConfig: readConfig,
+      getConfigSync: readConfigSync,
+    },
+    player,
+    registerPlugin: (plugin: PluginInfo): void => {
+      info = plugin;
+    },
+    registerCommand: (command: Command): void => {
+      player.commandHandler.registerCommand(command.setPlayer(player));
+    },
+    registerPlayerModule: (playerModule: PlayerModule): void => {
+      player.modules.push(playerModule.setPlayer(player));
+    },
+    requireModule: (module: string): any => {
+      try {
+        return require(module);
+      } catch (error) {
+        return null;
+      }
+    },
+  });
 
-  function registerCommand(command: Command): void {
-    player.commandHandler.registerCommand(command.setPlayer(player));
+  try {
+    runInContext(plugin, context, {
+      filename: file,
+    });
+  } catch (error) {
+    return void Logger.error(
+      `An error occured while loading plugin ${file}!`,
+      error
+    );
   }
-
-  function registerPlayerModule(playerModule: PlayerModule): void {
-    player.modules.push(playerModule.setPlayer(player));
-  }
-
-  eval(plugin);
 
   if (isPluginInfo(info)) return info;
   else
