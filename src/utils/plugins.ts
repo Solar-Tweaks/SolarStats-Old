@@ -14,7 +14,7 @@ export default async function loadPlugins(player: Player): Promise<void> {
   const files = await readdir(folder);
 
   for (const file of files) {
-    if (!file.endsWith('.js')) return;
+    if (!file.endsWith('.js')) continue;
 
     try {
       const loadedPlugin = loadPlugin(
@@ -44,8 +44,10 @@ export function loadPlugin(
     getConfig: readConfig,
   };
 
-  function registerPlugin(plugin: PluginInfo): PluginInfo {
-    return plugin;
+  let info: PluginInfo;
+
+  function registerPlugin(plugin: PluginInfo): void {
+    info = plugin;
   }
 
   function registerCommand(command: Command): void {
@@ -56,12 +58,12 @@ export function loadPlugin(
     player.modules.push(playerModule.setPlayer(player));
   }
 
-  const info = eval(plugin);
+  eval(plugin);
 
   if (isPluginInfo(info)) return info;
   else
     Logger.error(
-      `Plugin ${file} is not a valid plugin. It doesn't export a valid plugin info. This plugin may work but make sure to call the \`registerPlugin\` function at the end of the plugin!`
+      `Plugin ${file} is not a valid plugin. It doesn't export a valid plugin info. This plugin may work but make sure to call the \`registerPlugin\` function to register the plugin!`
     );
 }
 

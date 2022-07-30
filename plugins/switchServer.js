@@ -33,7 +33,7 @@
   registerPlayerModule(module);
 })();
 
-// Registering the plugin, always put this at the end of the file
+// Registering the plugin
 registerPlugin({
   name: 'Switch Server',
   description: "Send a message when the player's location is updated",

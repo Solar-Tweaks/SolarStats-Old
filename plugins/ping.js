@@ -14,7 +14,7 @@ cmd.onTriggered = () => {
 // Registering the command
 registerCommand(cmd);
 
-// Registering the plugin, always put this at the end of the file
+// Registering the plugin
 registerPlugin({
   name: 'Ping',
   description: 'Simple ping/pong command',
