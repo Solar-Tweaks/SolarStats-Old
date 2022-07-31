@@ -12,7 +12,7 @@ import requeue from '../commands/requeue';
 import settings from '../commands/settings';
 import solarsucks from '../commands/solarsucks';
 import stats from '../commands/stats';
-import { Team } from '../Types';
+import { IPlayer, Team } from '../Types';
 import { fetchPlayerLocation } from '../utils/hypixel';
 import loadPlugins, { PluginInfo } from '../utils/plugins';
 import PlayerModule from './PlayerModule';
@@ -33,6 +33,7 @@ export default class Player {
   public server?: Client;
   public status?: Status;
   public teams?: Team[];
+  public connectedPlayers: IPlayer[];
   public uuid?: string;
 
   public constructor(
@@ -75,6 +76,7 @@ export default class Player {
     this.online = true;
     this.server = server;
     this.teams = [];
+    this.connectedPlayers = [];
     this.uuid = client.uuid;
 
     this.modules.forEach((module) => {
@@ -89,9 +91,22 @@ export default class Player {
 
     this.listener.on('switch_server', async () => {
       this.teams = [];
+      this.connectedPlayers = [];
       this.lcPlayer.removeAllWaypoints();
       this.lcPlayer.removeAllTeammates();
       await this.refreshPlayerLocation();
+    });
+
+    this.listener.on('player_join', (uuid, name) => {
+      this.connectedPlayers.push({
+        uuid,
+        name,
+      });
+    });
+
+    this.listener.on('player_spawn', (uuid, entityId) => {
+      const p = this.connectedPlayers.find((v) => v.uuid === uuid);
+      if (p) p.entityId = entityId;
     });
 
     // In case the user reconnects to the server and is directly in a game
@@ -156,7 +171,7 @@ export default class Player {
   }
 
   public isInGameMode(gamemode: string): boolean {
-    if (this.status) return this.status.mode.startsWith(gamemode);
+    if (this.status) return this.status.mode?.startsWith(gamemode);
     else return false;
   }
 

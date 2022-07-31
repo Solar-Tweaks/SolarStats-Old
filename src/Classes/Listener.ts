@@ -60,6 +60,14 @@ export default class Listener extends (EventEmitter as new () => TypedEmitter<Li
         }
       }
 
+      if (meta.name === 'named_entity_spawn') {
+        this.emit('player_spawn', data.playerUUID, data.entityId);
+      }
+
+      if (meta.name === 'player_info' && data.action === 0) {
+        this.emit('player_join', data.data[0].UUID, data.data[0].name);
+      }
+
       if (meta.name === 'scoreboard_team') {
         switch (data.mode) {
           case 0:

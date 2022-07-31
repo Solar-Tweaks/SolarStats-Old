@@ -5,6 +5,6 @@ config.json
 .vscode
 packetDump.json
 src/player/modules/stats.ts
-plugin/
-!plugin/ping.js
-!plugin/switchServer.js
+plugins/
+!plugins/ping.js
+!plugins/switchServer.js

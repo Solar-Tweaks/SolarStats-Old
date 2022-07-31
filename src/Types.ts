@@ -58,6 +58,8 @@ export interface ListenerEvents {
   team_delete: (name: string) => void;
   team_edit: (data: unknown) => void;
   team_player_add: (name: string, players: string[]) => void;
+  player_spawn: (uuid: string, entityId: number) => void;
+  player_join: (uuid: string, username: string) => void;
 }
 
 export interface BlockPlacePacket {
@@ -167,4 +169,10 @@ export interface Slot {
 export interface Team {
   name: string;
   players: string[];
+}
+
+export interface IPlayer {
+  name: string;
+  uuid: string;
+  entityId?: number;
 }
