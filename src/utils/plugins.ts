@@ -41,6 +41,7 @@ export function loadPlugin(
   let info: PluginInfo;
 
   const context = createContext({
+    ...global,
     console: console,
     __dirname: __dirname,
     __cwd: process.cwd(),
