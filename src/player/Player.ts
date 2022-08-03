@@ -1,4 +1,7 @@
-import { LCPlayer } from '@solar-tweaks/minecraft-protocol-lunarclient';
+import {
+  LunarClientPlayer,
+  NotificationLevel,
+} from '@minecraft-js/lunarbukkitapi';
 import { Status } from 'hypixel-api-reborn';
 import { Client } from 'minecraft-protocol';
 import { InstantConnectProxy } from 'prismarine-proxy';
@@ -27,7 +30,7 @@ export default class Player {
 
   public client?: Client;
   public lastGameMode?: string;
-  public lcPlayer?: LCPlayer;
+  public lcPlayer?: LunarClientPlayer;
   public online?: boolean;
   public overriddenPackets: { incoming: string[]; outgoing: string[] };
   public server?: Client;
@@ -72,7 +75,22 @@ export default class Player {
 
   public connect(client: Client, server: Client): void {
     this.client = client;
-    this.lcPlayer = new LCPlayer(client);
+    this.lcPlayer = new LunarClientPlayer({
+      customHandling: {
+        registerPluginChannel: (channel) => {
+          this.client.write('custom_payload', {
+            channel: 'REGISTER',
+            data: Buffer.from(channel + '\0'),
+          });
+        },
+        sendPacket: (buffer) => {
+          this.client.write('custom_payload', {
+            channel: this.lcPlayer.channel,
+            data: buffer,
+          });
+        },
+      },
+    });
     this.online = true;
     this.server = server;
     this.teams = [];
@@ -152,7 +170,11 @@ export default class Player {
     if (!this.status) return;
     if (!this.status.mode) return;
     if (this.status.mode === 'LOBBY') return;
-    this.lcPlayer.sendNotification('Dodging game...', 2500);
+    this.lcPlayer.sendNotification(
+      'Dodging game...',
+      2500,
+      NotificationLevel.INFO
+    );
     const command = `/play ${this.status.mode.toLocaleLowerCase()}`;
     this.executeCommand('/lobby blitz');
     await new Promise((resolve) => setTimeout(resolve, 2500));

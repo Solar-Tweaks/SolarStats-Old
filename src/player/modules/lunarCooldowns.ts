@@ -25,14 +25,14 @@ playerModule.customCode = () => {
   player.listener.on('arrow_slot_empty', () => {
     if (!config.modules.lunarCooldowns) return;
     if (player.isInGameMode('DUELS_BRIDGE_')) {
-      player.lcPlayer.addCooldownManual('hypixel_bow', 3500, 261);
+      player.lcPlayer.addCooldown('hypixel_bow', 3500, 261);
     }
   });
 
   player.listener.on('arrow_slot_filled', () => {
     if (!config.modules.lunarCooldowns) return;
     if (player.isInGameMode('DUELS_BRIDGE_')) {
-      player.lcPlayer.removeCooldownManual('hypixel_bow');
+      player.lcPlayer.removeCooldown('hypixel_bow');
     }
   });
 };
