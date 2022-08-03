@@ -75,7 +75,14 @@ export default class Player {
 
   public connect(client: Client, server: Client): void {
     this.client = client;
+    this.online = true;
+    this.server = server;
+    this.teams = [];
+    this.connectedPlayers = [];
+    this.uuid = client.uuid;
+
     this.lcPlayer = new LunarClientPlayer({
+      playerUUID: this.uuid,
       customHandling: {
         registerPluginChannel: (channel) => {
           this.client.write('custom_payload', {
@@ -91,11 +98,7 @@ export default class Player {
         },
       },
     });
-    this.online = true;
-    this.server = server;
-    this.teams = [];
-    this.connectedPlayers = [];
-    this.uuid = client.uuid;
+    this.lcPlayer.connect();
 
     this.modules.forEach((module) => {
       try {
