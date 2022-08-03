@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/Solar-Tweaks/SolarStats#readme",
   "dependencies": {
+    "@minecraft-js/lunarbukkitapi": "^1.1.0",
     "@solar-tweaks/minecraft-protocol-lunarclient": "github:Solar-Tweaks/minecraft-protocol-lunarclient",
     "axios": "^0.26.0",
     "chalk": "^4.1.2",
