@@ -1,4 +1,4 @@
-import { Waypoint } from '@solar-tweaks/minecraft-protocol-lunarclient';
+import { Waypoint } from '@minecraft-js/lunarbukkitapi';
 import { Player as HypixelPlayer } from 'hypixel-api-reborn';
 import { Client, ServerClient } from 'minecraft-protocol';
 

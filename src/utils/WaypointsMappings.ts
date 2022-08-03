@@ -1,5 +1,15 @@
-import { WaypointColor } from '@solar-tweaks/minecraft-protocol-lunarclient';
 import { WaypointsMappings as _WaypointsMappings } from '../Types';
+
+enum WaypointColor {
+  RED = 0xff0000,
+  BLUE = 0x0000ff,
+  GREEN = 0x00ff00,
+  YELLOW = 0xffff00,
+  AQUA = 0x00ffff,
+  WHITE = 0xffffff,
+  PINK = 0xff00ff,
+  GRAY = 0x808080,
+}
 
 const WaypointsMappings: _WaypointsMappings = {
   Lighthouse: [
