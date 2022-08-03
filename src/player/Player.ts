@@ -53,15 +53,15 @@ export default class Player {
       outgoing: ['chat', 'block_place'],
     };
 
-    this.commandHandler = new CommandHandler(this.proxy).registerCommand([
+    this.commandHandler = new CommandHandler(this.proxy).registerCommand(
       dodge.setPlayer(this),
       requeue.setPlayer(this),
       stats.setPlayer(this),
       dumpPackets.setPlayer(this),
       settings.setPlayer(this),
       debug.setPlayer(this),
-      solarsucks.setPlayer(this),
-    ]);
+      solarsucks.setPlayer(this)
+    );
 
     this.modules.forEach((module) => module.setPlayer(this));
 

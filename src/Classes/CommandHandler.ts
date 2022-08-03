@@ -34,20 +34,12 @@ export default class CommandHandler {
     });
   }
 
-  public registerCommand(command: Command | Command[]): CommandHandler {
-    if (!Array.isArray(command)) {
-      this.commands.push(command);
-      this.commandsList.push(`/${command.name}`);
-      this.commandsList.push(...command.aliases);
-    } else {
-      this.commands = this.commands.concat(command);
-      this.commandsList = this.commandsList.concat(
-        command.map((c) => `/${c.name}`)
-      );
-      command.forEach((command) => {
-        command.aliases.forEach((c) => this.commandsList.push(`/${c}`));
-      });
-    }
+  public registerCommand(...commands: Command[]): CommandHandler {
+    this.commands = this.commands.concat(commands);
+    this.commandsList = this.commandsList.concat(
+      ...commands.map((c) => [`/${c.name}`, ...c.aliases.map((a) => `/${a}`)])
+    );
+
     return this;
   }
 
