@@ -1,6 +1,7 @@
 import Item from '../Classes/Item';
 import { ListenerEvents } from '../Types';
 import Player from './Player';
+import { Status } from 'hypixel-api-reborn';
 
 export default class PlayerModule {
   public readonly name: string;
@@ -10,8 +11,8 @@ export default class PlayerModule {
 
   public handler: Function;
   public customCode: () => void;
-  public onConfigChange: () => void;
-  public onLocationUpdate: () => void;
+  public onConfigChange: (enabled?: boolean) => void;
+  public onLocationUpdate: (status?: Status) => void;
   public onDisconnect: () => void;
 
   public settingItem: Item;

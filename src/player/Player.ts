@@ -158,7 +158,7 @@ export default class Player {
 
         this.modules.forEach((module) => {
           try {
-            module.onLocationUpdate();
+            module.onLocationUpdate(this.status);
           } catch (error) {
             this.onModuleCrash(module, error);
           }
