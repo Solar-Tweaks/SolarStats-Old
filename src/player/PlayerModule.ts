@@ -10,6 +10,7 @@ export default class PlayerModule {
 
   public handler: Function;
   public customCode: () => void;
+  public onConfigChange: () => void;
   public onLocationUpdate: () => void;
   public onDisconnect: () => void;
 
@@ -27,6 +28,7 @@ export default class PlayerModule {
 
     this.handler = () => {};
     this.customCode = () => {};
+    this.onConfigChange = () => {};
     this.onLocationUpdate = () => {};
     this.onDisconnect = () => {};
 
