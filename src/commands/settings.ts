@@ -97,6 +97,7 @@ command.onTriggered = async (chatCommand, args) => {
         config.modules[module.configKey] ? 'aEnabled' : 'cDisabled'
       }`;
       inventory.setSlot(player.client, module.settingItem, slot);
+      module.onConfigChange();
     };
   }
 
