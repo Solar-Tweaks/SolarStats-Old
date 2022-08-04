@@ -88,7 +88,12 @@ command.onTriggered = async (chatCommand, args) => {
       newConfig[module.configKey] = !config.modules[module.configKey];
       await setValue('modules', newConfig);
       await reloadConfig();
-      module.settingItem.lore[4] = `§7Current: §${
+      // Fixes The Locations In The Lore For Settings Items
+      module.settingItem.lore[
+        module.settingItem.lore.indexOf(
+          module.settingItem.lore.find((i) => i.includes('§7Current: '))
+        )
+      ] = `§7Current: §${
         config.modules[module.configKey] ? 'aEnabled' : 'cDisabled'
       }`;
       inventory.setSlot(player.client, module.settingItem, slot);
@@ -103,6 +108,22 @@ command.onTriggered = async (chatCommand, args) => {
 
     switch (event.slot) {
       case 0:
+        // Sends A Message In Chat (In Hypixel's Format) With The API Key
+        inventory.close(player);
+        player.client?.write('chat', {
+          message: JSON.stringify({
+            text: `§aYour API Key is\n§b${config.apiKey}`,
+            clickEvent: {
+              action: 'suggest_command',
+              value: config.apiKey,
+            },
+            hoverEvent: {
+              action: 'show_text',
+              value: '§eClick to put key in chat so you can copy!',
+            },
+          }),
+        });
+        break;
       case 12:
       case 44:
         event.cancel(player.client);
