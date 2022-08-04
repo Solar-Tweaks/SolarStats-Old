@@ -63,11 +63,7 @@ const onIncomingPacket = async (
       5000
     );
 
-    playerModule.player.lcPlayer.addCooldownManual(
-      data.team,
-      30000,
-      teams[realTeam]
-    );
+    playerModule.player.lcPlayer.addCooldown(data.team, 30000, teams[realTeam]);
 
     const response = await axios
       .get(
@@ -89,7 +85,9 @@ const onIncomingPacket = async (
       i.substr(16, 4) +
       '-' +
       i.substr(20);
-    playerModule.player.lcPlayer.addTeammate(addDashes(response.data.id));
+    playerModule.player.lcPlayer.addTeammate({
+      uuid: addDashes(response.data.id),
+    });
   }
 };
 

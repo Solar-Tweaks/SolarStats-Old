@@ -1,3 +1,4 @@
+import { NotificationLevel } from '@minecraft-js/lunarbukkitapi';
 import { config } from '../..';
 import Item from '../../Classes/Item';
 import WaypointsMappings from '../../utils/WaypointsMappings';
@@ -29,7 +30,7 @@ playerModule.onLocationUpdate = () => {
       player.lcPlayer.sendNotification(
         `Couldn't find waypoints for ${map}`,
         2500,
-        'error'
+        NotificationLevel.ERROR
       );
     };
     if (Object.prototype.hasOwnProperty.call(WaypointsMappings, map)) {

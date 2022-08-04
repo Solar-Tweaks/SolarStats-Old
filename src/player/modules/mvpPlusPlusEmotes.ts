@@ -14,7 +14,7 @@ settingItem.lore = [
 ];
 
 const playerModule = new PlayerModule(
-  'MVP++Emotes',
+  'MVP++ Emotes',
   'Make MVP++ emotes available to all players',
   settingItem,
   'mvpppEmotes'

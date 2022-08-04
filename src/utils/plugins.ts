@@ -43,6 +43,7 @@ export function loadPlugin(
   const context = createContext({
     ...global,
     console: console,
+    Buffer,
     __dirname: __dirname,
     __cwd: process.cwd(),
     __plugins: join(process.cwd(), 'plugins'),

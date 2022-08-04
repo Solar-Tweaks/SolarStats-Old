@@ -80,8 +80,9 @@ playerModule.customCode = () => {
       uuids.forEach((uuid) => {
         if (uuid === undefined) return;
 
-        player.lcPlayer.addTeammate(
-          uuid.substr(0, 8) +
+        player.lcPlayer.addTeammate({
+          uuid:
+            uuid.substr(0, 8) +
             '-' +
             uuid.substr(8, 4) +
             '-' +
@@ -89,8 +90,8 @@ playerModule.customCode = () => {
             '-' +
             uuid.substr(16, 4) +
             '-' +
-            uuid.substr(20)
-        );
+            uuid.substr(20),
+        });
       });
       // await this.sendTeammates();
     });
