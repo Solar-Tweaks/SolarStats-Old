@@ -3,7 +3,7 @@ import {
   NotificationLevel,
 } from '@minecraft-js/lunarbukkitapi';
 import { Status } from 'hypixel-api-reborn';
-import { Client } from 'minecraft-protocol';
+import { Client, ServerClient, PacketMeta } from 'minecraft-protocol';
 import { InstantConnectProxy } from 'prismarine-proxy';
 import CommandHandler from '../Classes/CommandHandler';
 import Listener from '../Classes/Listener';
@@ -19,6 +19,8 @@ import { IPlayer, Team } from '../Types';
 import { fetchPlayerLocation } from '../utils/hypixel';
 import loadPlugins, { PluginInfo } from '../utils/plugins';
 import PlayerModule from './PlayerModule';
+
+type PacketType = 'incoming' | 'outgoing';
 
 export default class Player {
   public readonly crashedModules: PlayerModule[];
@@ -216,5 +218,20 @@ export default class Player {
     this.modules.splice(this.modules.indexOf(module), 1);
     Logger.error(`Error while executing module ${module.name}!`, error);
     this.crashedModules.push(module);
+  }
+
+  public onPacket(
+    type: PacketType,
+    name: string,
+    func: (
+      data: any,
+      meta: PacketMeta,
+      toClient: ServerClient,
+      toServer: Client
+    ) => {}
+  ) {
+    this.proxy.on(type, (data, meta, toClient, toServer) => {
+      if (meta.name == name) func(data, meta, toClient, toServer);
+    });
   }
 }

@@ -8,6 +8,7 @@ import Logger from '../Classes/Logger';
 import Player from '../player/Player';
 import PlayerModule from '../player/PlayerModule';
 import { readConfig, readConfigSync } from './config';
+import { StringComponentBuilder } from '@minecraft-js/chat';
 
 export default async function loadPlugins(player: Player): Promise<void> {
   const folder = 'plugins';
@@ -42,9 +43,9 @@ export function loadPlugin(
 
   const context = createContext({
     ...global,
-    console: console,
+    console,
     Buffer,
-    __dirname: __dirname,
+    __dirname,
     __cwd: process.cwd(),
     __plugins: join(process.cwd(), 'plugins'),
     toolbox: {
@@ -53,6 +54,7 @@ export function loadPlugin(
       PlayerModule,
       Inventory,
       Item,
+      Message: StringComponentBuilder,
       getConfig: readConfig,
       getConfigSync: readConfigSync,
     },
