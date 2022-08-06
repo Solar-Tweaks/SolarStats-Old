@@ -219,19 +219,4 @@ export default class Player {
     Logger.error(`Error while executing module ${module.name}!`, error);
     this.crashedModules.push(module);
   }
-
-  public onPacket(
-    type: PacketType,
-    name: string,
-    func: (
-      data: any,
-      meta: PacketMeta,
-      toClient: ServerClient,
-      toServer: Client
-    ) => {}
-  ) {
-    this.proxy.on(type, (data, meta, toClient, toServer) => {
-      if (meta.name == name) func(data, meta, toClient, toServer);
-    });
-  }
 }
