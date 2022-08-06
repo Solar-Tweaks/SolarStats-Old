@@ -3,7 +3,7 @@ import {
   NotificationLevel,
 } from '@minecraft-js/lunarbukkitapi';
 import { Status } from 'hypixel-api-reborn';
-import { Client, ServerClient, PacketMeta } from 'minecraft-protocol';
+import { Client } from 'minecraft-protocol';
 import { InstantConnectProxy } from 'prismarine-proxy';
 import CommandHandler from '../Classes/CommandHandler';
 import Listener from '../Classes/Listener';
@@ -19,8 +19,6 @@ import { IPlayer, Team } from '../Types';
 import { fetchPlayerLocation } from '../utils/hypixel';
 import loadPlugins, { PluginInfo } from '../utils/plugins';
 import PlayerModule from './PlayerModule';
-
-type PacketType = 'incoming' | 'outgoing';
 
 export default class Player {
   public readonly crashedModules: PlayerModule[];
