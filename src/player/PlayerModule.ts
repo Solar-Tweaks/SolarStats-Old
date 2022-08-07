@@ -3,6 +3,13 @@ import { ListenerEvents } from '../Types';
 import Player from './Player';
 import { Status } from 'hypixel-api-reborn';
 
+enum Events {
+  CustomCode = 'customCode',
+  ConfigChange = 'onConfigChange',
+  LocationUpdate = 'onLocationUpdate',
+  Disconnect = 'onDisconnect',
+}
+
 export default class PlayerModule {
   public readonly name: string;
   public readonly description: string;
@@ -40,5 +47,10 @@ export default class PlayerModule {
   public setPlayer(player: Player): PlayerModule {
     this.player = player;
     return this;
+  }
+
+  public handle(type: keyof typeof Events, func: (...args: any) => void): () => void {
+    this[Events[type]] = func;
+    return func;
   }
 }
