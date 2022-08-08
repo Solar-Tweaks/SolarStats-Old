@@ -49,7 +49,7 @@ export function loadPlugin(
     ...global,
     dirFetch: fetch,
     fetch: async (url: string, options: object): Promise<string | object> => {
-      var returnData: any = await fetch(url, options);
+      let returnData: any = await fetch(url, options);
       returnData = await returnData.text();
 
       try {
