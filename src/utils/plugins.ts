@@ -60,7 +60,7 @@ export function loadPlugin(
     },
     axios,
     console,
-    Logger,
+    Logger: new Logger(file.substring(0, file.length - 3)),
     Buffer,
     __dirname,
     __cwd: process.cwd(),
