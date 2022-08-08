@@ -3,12 +3,16 @@ import { join } from 'node:path';
 import { createContext, runInContext } from 'node:vm';
 import Command from '../Classes/Command';
 import Inventory from '../Classes/Inventory';
+import { InventoryType } from '../Types';
 import Item from '../Classes/Item';
 import Logger from '../Classes/Logger';
 import Player from '../player/Player';
 import PlayerModule from '../player/PlayerModule';
 import { readConfig, readConfigSync } from './config';
 import { StringComponentBuilder } from '@minecraft-js/chat';
+import { parse as parseNBT } from 'prismarine-nbt';
+import fetch from 'node-fetch';
+import axios from 'axios';
 
 export default async function loadPlugins(player: Player): Promise<void> {
   const folder = 'plugins';
@@ -20,7 +24,7 @@ export default async function loadPlugins(player: Player): Promise<void> {
     if (!file.endsWith('.js')) continue;
 
     try {
-      const loadedPlugin = await loadPlugin(
+      const loadedPlugin = loadPlugin(
         player,
         await readFile(join(folder, file), 'utf8'),
         file
@@ -43,20 +47,56 @@ export function loadPlugin(
 
   const context = createContext({
     ...global,
+    dirFetch: fetch,
+    fetch: async (url: string, options: object): Promise<string | object> => {
+      var returnData: any = await fetch(url, options);
+      returnData = await returnData.text();
+
+      try {
+        returnData = JSON.parse(returnData);
+      } catch {}
+
+      return returnData;
+    },
+    axios,
     console,
+    Logger,
     Buffer,
     __dirname,
     __cwd: process.cwd(),
     __plugins: join(process.cwd(), 'plugins'),
     toolbox: {
-      Logger,
       Command,
       PlayerModule,
       Inventory,
+      InventoryType,
       Item,
       Message: StringComponentBuilder,
       getConfig: readConfig,
       getConfigSync: readConfigSync,
+      parseNBTData: (
+        data: Buffer | string,
+        nbtType?: 'big' | 'little' | 'littleVarint'
+      ): Promise<{
+        parsed: {
+          type: 'compound';
+          value: any;
+        } & {
+          name: string;
+        };
+        type: 'big' | 'little' | 'littleVarint';
+        metadata: {
+          // The decompressed buffer
+          buffer: Buffer;
+          // The length of bytes read from the buffer
+          size: number;
+        };
+      }> => {
+        if (!Buffer.isBuffer(data)) {
+          data = Buffer.from(data, 'base64');
+        }
+        return parseNBT(data, nbtType);
+      },
     },
     player,
     registerPlugin: (plugin: PluginInfo): void => {
@@ -70,8 +110,20 @@ export function loadPlugin(
     },
     requireModule: (module: string): any => {
       try {
+        if (
+          module.startsWith('.') &&
+          (module.charAt(1) == '/' ||
+            (module.charAt(1) == '.' && module.charAt(2) == '/'))
+        ) {
+          module = join(process.cwd(), 'plugins', module);
+        }
         return require(module);
       } catch (error) {
+        // Checks if the error was because the module doesn't exist, in which case it'll return null
+        // but if the error was something else it will throw it.
+        if (error.code != 'MODULE_NOT_FOUND') {
+          throw error;
+        }
         return null;
       }
     },
@@ -98,7 +150,7 @@ export function loadPlugin(
 export type PluginInfo = {
   name: string;
   description: string;
-  version?: string;
+  version?: `${number}.${number}.${number}`;
   author?: string;
 };
 
