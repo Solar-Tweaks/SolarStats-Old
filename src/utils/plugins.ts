@@ -45,20 +45,21 @@ export function loadPlugin(
 ): PluginInfo {
   let info: PluginInfo;
 
-  let Logging: Logger = new Logger(file.substring(0, file.length - 3));
+  const Logging: Logger = new Logger(file.substring(0, file.length - 3));
 
   const context = createContext({
     ...global,
     dirFetch: fetch,
-    fetch: async (url: string, options: object): Promise<string | object> => {
-      let returnData: any = await fetch(url, options);
-      returnData = await returnData.text();
+    fetch: (url: string, options: object): Promise<string | object> => {
+      return fetch(url, options)
+        .then((res) => res.text())
+        .then((result) => {
+          try {
+            result = JSON.parse(result);
+          } catch {}
 
-      try {
-        returnData = JSON.parse(returnData);
-      } catch {}
-
-      return returnData;
+          return result;
+        });
     },
     axios,
     console,
