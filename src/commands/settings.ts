@@ -88,7 +88,6 @@ command.onTriggered = async (chatCommand, args) => {
       newConfig[module.configKey] = !config.modules[module.configKey];
       await setValue('modules', newConfig);
       await reloadConfig();
-      // Fixes The Locations In The Lore For Settings Items
       module.settingItem.lore[
         module.settingItem.lore.indexOf(
           module.settingItem.lore.find((i) => i.includes('§7Current: '))
@@ -98,6 +97,7 @@ command.onTriggered = async (chatCommand, args) => {
       }`;
       inventory.setSlot(player.client, module.settingItem, slot);
       module.onConfigChange(config.modules[module.configKey]);
+      module.toggleEnabled(config.modules[module.configKey]);
     };
   }
 

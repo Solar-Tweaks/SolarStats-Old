@@ -2,6 +2,7 @@ import Item from '../Classes/Item';
 import { ListenerEvents } from '../Types';
 import Player from './Player';
 import { Status } from 'hypixel-api-reborn';
+import { readConfigSync } from '../utils/config';
 
 enum Events {
   CustomCode = 'customCode',
@@ -15,6 +16,7 @@ export default class PlayerModule {
   public readonly description: string;
   public event: keyof ListenerEvents;
   public player: Player;
+  public enabled: boolean;
 
   public handler: Function;
   public customCode: () => void;
@@ -34,6 +36,12 @@ export default class PlayerModule {
     this.name = name;
     this.description = description;
 
+    if (configKey) {
+      this.enabled = !!readConfigSync().modules[configKey];
+    } else {
+      this.enabled = true;
+    }
+
     this.handler = () => {};
     this.customCode = () => {};
     this.onConfigChange = () => {};
@@ -47,6 +55,10 @@ export default class PlayerModule {
   public setPlayer(player: Player): PlayerModule {
     this.player = player;
     return this;
+  }
+
+  public toggleEnabled(value?: boolean) {
+    this.enabled = value != undefined ? value : !this.enabled;
   }
 
   public handle(
