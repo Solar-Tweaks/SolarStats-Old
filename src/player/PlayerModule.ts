@@ -49,8 +49,11 @@ export default class PlayerModule {
     return this;
   }
 
-  public handle(type: keyof typeof Events, func: (...args: any) => void): () => void {
+  public handle(
+    type: keyof typeof Events,
+    func: (...args: any) => void
+  ): PlayerModule {
     this[Events[type]] = func;
-    return func;
+    return this;
   }
 }
