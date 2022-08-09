@@ -45,6 +45,8 @@ export function loadPlugin(
 ): PluginInfo {
   let info: PluginInfo;
 
+  let Logging: Logger = new Logger(file.substring(0, file.length - 3));
+
   const context = createContext({
     ...global,
     dirFetch: fetch,
@@ -60,7 +62,7 @@ export function loadPlugin(
     },
     axios,
     console,
-    Logger: new Logger(file.substring(0, file.length - 3)),
+    Logger: Logging,
     Buffer,
     __dirname,
     __cwd: process.cwd(),
@@ -101,6 +103,7 @@ export function loadPlugin(
     player,
     registerPlugin: (plugin: PluginInfo): void => {
       info = plugin;
+      Logging.setIdentifier(plugin.name);
     },
     registerCommand: (command: Command): void => {
       player.commandHandler.registerCommand(command.setPlayer(player));
@@ -134,16 +137,13 @@ export function loadPlugin(
       filename: file,
     });
   } catch (error) {
-    return void Logger.error(
-      `An error occured while loading plugin ${file}!`,
-      error
-    );
+    return void Logging.error('An error occured while loading Plugin!', error);
   }
 
   if (isPluginInfo(info)) return info;
   else
-    Logger.error(
-      `Plugin ${file} is not a valid plugin. It doesn't export a valid plugin info. This plugin may work but make sure to call the \`registerPlugin\` function to register the plugin!`
+    Logging.error(
+      "This is not a valid Plugin. It doesn't export a valid plugin info. This plugin may work but make sure to call the `registerPlugin` function to register the plugin!"
     );
 }
 

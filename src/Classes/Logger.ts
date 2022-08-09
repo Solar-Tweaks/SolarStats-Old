@@ -7,6 +7,10 @@ export default class Logger {
     this.identifier = identifier;
   }
 
+  public setIdentifier(identifier: string) {
+    this.identifier = identifier;
+  }
+
   private getPrefix() {
     return this.identifier
       ? [chalk.bgBlueBright.black(` ${this.identifier} `)]
