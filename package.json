@@ -36,6 +36,7 @@
     "jsonschema": "^1.4.0",
     "minecraft-protocol": "^1.32.0",
     "node-downloader-helper": "^2.1.0",
+    "nodemon": "^2.0.19",
     "prismarine-proxy": "^1.1.1",
     "systray": "^1.0.5",
     "uuid": "^8.3.2"
