@@ -67,7 +67,7 @@ export interface ListenerEvents {
     stay?: number,
     fadeOut?: number
   ) => void;
-  action_bar: (text: string) => void;
+  action_bar: (message: object) => void;
 }
 
 export interface BlockPlacePacket {

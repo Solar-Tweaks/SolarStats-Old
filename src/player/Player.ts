@@ -50,8 +50,8 @@ export default class Player {
     this.plugins = [];
     this.proxy = proxy;
 
-    this.listener.setMaxListeners(Infinity);
-    this.proxy.setMaxListeners(Infinity);
+    this.listener.setMaxListeners(0);
+    this.proxy.setMaxListeners(0);
 
     // Packets that have a custom handling
     this.overriddenPackets = {

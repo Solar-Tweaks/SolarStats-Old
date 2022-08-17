@@ -87,7 +87,7 @@ export default class Listener extends (EventEmitter as new () => TypedEmitter<Li
       }
 
       if (meta.name === 'chat' && data.position == 2) {
-        this.emit('action_bar', data.message);
+        this.emit('action_bar', JSON.parse(data.message));
       }
 
       if (meta.name === 'title') {
