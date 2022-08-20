@@ -50,6 +50,9 @@ export default class Player {
     this.plugins = [];
     this.proxy = proxy;
 
+    this.listener.setMaxListeners(0);
+    this.proxy.setMaxListeners(0);
+
     // Packets that have a custom handling
     this.overriddenPackets = {
       incoming: [],
@@ -158,7 +161,7 @@ export default class Player {
 
         this.modules.forEach((module) => {
           try {
-            module.onLocationUpdate();
+            module.onLocationUpdate(this.status);
           } catch (error) {
             this.onModuleCrash(module, error);
           }

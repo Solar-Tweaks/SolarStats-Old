@@ -60,6 +60,14 @@ export interface ListenerEvents {
   team_player_add: (name: string, players: string[]) => void;
   player_spawn: (uuid: string, entityId: number) => void;
   player_join: (uuid: string, username: string) => void;
+  title: (
+    action: number,
+    text?: string,
+    fadeIn?: number,
+    stay?: number,
+    fadeOut?: number
+  ) => void;
+  action_bar: (message: object) => void;
 }
 
 export interface BlockPlacePacket {

@@ -85,6 +85,21 @@ export default class Listener extends (EventEmitter as new () => TypedEmitter<Li
             break;
         }
       }
+
+      if (meta.name === 'chat' && data.position == 2) {
+        this.emit('action_bar', JSON.parse(data.message));
+      }
+
+      if (meta.name === 'title') {
+        this.emit(
+          'title',
+          data.action,
+          data.text,
+          data.fadeIn,
+          data.stay,
+          data.fadeOut
+        );
+      }
     });
 
     proxy.on('outgoing', (data, meta, toClient, toServer) => {
