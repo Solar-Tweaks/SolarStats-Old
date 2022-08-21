@@ -114,11 +114,7 @@ export function loadPlugin(
     },
     requireModule: (module: string): any => {
       try {
-        if (
-          module.startsWith('.') &&
-          (module.charAt(1) == '/' ||
-            (module.charAt(1) == '.' && module.charAt(2) == '/'))
-        ) {
+        if (module.startsWith('.')) {
           module = join(process.cwd(), 'plugins', module);
         }
         return require(module);
